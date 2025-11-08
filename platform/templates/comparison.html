@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Comparison - Architecture Patterns Playground</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-900">
+                        🏗️ Architecture Patterns Playground
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a href="/comparison" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Compare</a>
+                    <a href="https://github.com" target="_blank" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h2 class="text-4xl font-bold mb-4">Architecture Pattern Comparison</h2>
+            <p class="text-xl text-blue-100">Compare characteristics, trade-offs, and use cases side by side</p>
+        </div>
+    </div>
+
+    <!-- Comparison Table -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-white rounded-lg shadow-lg overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-900">Pattern</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-900">Complexity</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-900">Key Strength</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-900">Main Weakness</th>
+                        <th class="px-6 py-4 text-left text-sm font-bold text-gray-900">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    {% for arch in architectures %}
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4">
+                            <a href="/architecture/{{ arch.id }}" class="text-{{ arch.color }}-600 font-semibold hover:text-{{ arch.color }}-800">
+                                {{ arch.name }}
+                            </a>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-3 py-1 bg-gray-100 rounded text-sm">{{ arch.complexity }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ arch.pros[0] }}</td>
+                        <td class="px-6 py-4 text-sm text-gray-700">{{ arch.cons[0] }}</td>
+                        <td class="px-6 py-4">
+                            {% if arch.status == 'implemented' %}
+                            <span class="px-3 py-1 bg-green-100 text-green-800 rounded text-xs font-bold">LIVE</span>
+                            {% else %}
+                            <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded text-xs font-bold">SOON</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Detailed Comparison Cards -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <h3 class="text-3xl font-bold text-gray-900 mb-8">Detailed Comparison</h3>
+
+        <!-- Scalability -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h4 class="text-2xl font-bold text-gray-900 mb-6">📈 Scalability</h4>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h5 class="font-bold text-blue-600 mb-2">Low Scalability</h5>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Monolith</li>
+                        <li>• Layered</li>
+                    </ul>
+                    <p class="text-xs text-gray-500 mt-2">Scale entire application as a unit</p>
+                </div>
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h5 class="font-bold text-green-600 mb-2">Medium Scalability</h5>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Modular Monolith</li>
+                        <li>• Service-Based</li>
+                    </ul>
+                    <p class="text-xs text-gray-500 mt-2">Some independent scaling possible</p>
+                </div>
+                <div class="border-l-4 border-purple-500 pl-4">
+                    <h5 class="font-bold text-purple-600 mb-2">High Scalability</h5>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Microservices</li>
+                        <li>• Event-Driven</li>
+                    </ul>
+                    <p class="text-xs text-gray-500 mt-2">Fine-grained independent scaling</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Deployment -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h4 class="text-2xl font-bold text-gray-900 mb-6">🚀 Deployment Complexity</h4>
+            <div class="grid md:grid-cols-3 gap-6">
+                <div class="border-l-4 border-green-500 pl-4">
+                    <h5 class="font-bold text-green-600 mb-2">Simple</h5>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Monolith</li>
+                        <li>• Layered</li>
+                    </ul>
+                    <p class="text-xs text-gray-500 mt-2">Single deployment unit</p>
+                </div>
+                <div class="border-l-4 border-yellow-500 pl-4">
+                    <h5 class="font-bold text-yellow-600 mb-2">Moderate</h5>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Modular Monolith</li>
+                        <li>• Service-Based</li>
+                    </ul>
+                    <p class="text-xs text-gray-500 mt-2">Few deployment units</p>
+                </div>
+                <div class="border-l-4 border-red-500 pl-4">
+                    <h5 class="font-bold text-red-600 mb-2">Complex</h5>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Microservices</li>
+                        <li>• Event-Driven</li>
+                    </ul>
+                    <p class="text-xs text-gray-500 mt-2">Many independent deployments</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Structure -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h4 class="text-2xl font-bold text-gray-900 mb-6">👥 Team Structure Impact</h4>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="border-l-4 border-blue-500 pl-4">
+                    <h5 class="font-bold text-blue-600 mb-2">Single Team / Small Teams</h5>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Monolith - Best for small teams</li>
+                        <li>• Modular Monolith - Good for growing teams</li>
+                        <li>• Layered - Traditional team organization</li>
+                    </ul>
+                </div>
+                <div class="border-l-4 border-purple-500 pl-4">
+                    <h5 class="font-bold text-purple-600 mb-2">Multiple Teams / Large Orgs</h5>
+                    <ul class="text-sm text-gray-700 space-y-1">
+                        <li>• Microservices - Team autonomy</li>
+                        <li>• Service-Based - Bounded context teams</li>
+                        <li>• Event-Driven - Async collaboration</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cost Comparison -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h4 class="text-2xl font-bold text-gray-900 mb-6">💰 Cost Considerations</h4>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center border-b pb-3">
+                    <span class="font-semibold">Infrastructure Cost</span>
+                    <div class="text-sm text-gray-600">
+                        <span class="text-green-600 font-bold">Low:</span> Monolith, Layered |
+                        <span class="text-yellow-600 font-bold">Medium:</span> Modular, Service-Based |
+                        <span class="text-red-600 font-bold">High:</span> Microservices, Event-Driven
+                    </div>
+                </div>
+                <div class="flex justify-between items-center border-b pb-3">
+                    <span class="font-semibold">Development Speed (Initial)</span>
+                    <div class="text-sm text-gray-600">
+                        <span class="text-green-600 font-bold">Fast:</span> Monolith, Layered |
+                        <span class="text-yellow-600 font-bold">Medium:</span> Modular |
+                        <span class="text-red-600 font-bold">Slow:</span> Microservices, Event-Driven
+                    </div>
+                </div>
+                <div class="flex justify-between items-center">
+                    <span class="font-semibold">Maintenance Complexity</span>
+                    <div class="text-sm text-gray-600">
+                        <span class="text-green-600 font-bold">Low:</span> Modular Monolith |
+                        <span class="text-yellow-600 font-bold">Medium:</span> Monolith, Service-Based |
+                        <span class="text-red-600 font-bold">High:</span> Microservices, Event-Driven
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decision Guide -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <h3 class="text-3xl font-bold mb-6">Quick Decision Guide</h3>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="bg-white/10 rounded-lg p-6">
+                    <h4 class="text-xl font-bold mb-4">Start Here If...</h4>
+                    <ul class="space-y-2 text-blue-100">
+                        <li>• New project → <strong>Monolith</strong></li>
+                        <li>• Growing codebase → <strong>Modular Monolith</strong></li>
+                        <li>• Traditional enterprise → <strong>Layered</strong></li>
+                        <li>• Need organization → <strong>Service-Based</strong></li>
+                    </ul>
+                </div>
+                <div class="bg-white/10 rounded-lg p-6">
+                    <h4 class="text-xl font-bold mb-4">Advanced Patterns If...</h4>
+                    <ul class="space-y-2 text-blue-100">
+                        <li>• Large org, high scale → <strong>Microservices</strong></li>
+                        <li>• Real-time, async → <strong>Event-Driven</strong></li>
+                        <li>• Have distributed systems expertise</li>
+                        <li>• Can invest in infrastructure</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Back Button -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+        <a href="/" class="bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition inline-block">
+            ← Back to Home
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm">Architecture Patterns Playground</p>
+                    <p class="text-xs text-gray-400 mt-1">Learn by building, understand by comparing</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="https://github.com" class="text-gray-400 hover:text-white text-sm">GitHub</a>
+                    <a href="https://calm.finos.org" class="text-gray-400 hover:text-white text-sm">CALM Docs</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

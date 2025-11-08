@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Architecture Patterns Playground</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-900">
+                        🏗️ Architecture Patterns Playground
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a href="/comparison" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Compare</a>
+                    <a href="https://github.com" target="_blank" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+            <div class="text-center">
+                <h2 class="text-5xl font-extrabold mb-6">
+                    Learn Software Architecture by Building
+                </h2>
+                <p class="text-xl mb-8 text-blue-100 max-w-3xl mx-auto">
+                    Explore 6 different architectural patterns through a real Task Manager application.
+                    See the same domain implemented in different ways, understand the trade-offs,
+                    and level up your architectural thinking.
+                </p>
+                <div class="flex justify-center space-x-4">
+                    <a href="#architectures" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-blue-50 transition">
+                        Explore Patterns
+                    </a>
+                    <a href="/comparison" class="bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-800 transition">
+                        Compare All
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- What You'll Learn Section -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="text-center mb-12">
+            <h3 class="text-3xl font-bold text-gray-900 mb-4">What You'll Learn</h3>
+            <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+                Each implementation teaches you different architectural concepts and trade-offs
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8 mb-16">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-4xl mb-4">📚</div>
+                <h4 class="text-xl font-bold mb-2">Real Working Code</h4>
+                <p class="text-gray-600">
+                    Not just diagrams - see actual implementations you can run, modify, and deploy
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-4xl mb-4">⚖️</div>
+                <h4 class="text-xl font-bold mb-2">Trade-off Analysis</h4>
+                <p class="text-gray-600">
+                    Understand when to use each pattern and the consequences of your choices
+                </p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <div class="text-4xl mb-4">📖</div>
+                <h4 class="text-xl font-bold mb-2">CALM Documentation</h4>
+                <p class="text-gray-600">
+                    Learn industry-standard architecture documentation using FINOS CALM framework
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Architecture Patterns Grid -->
+    <div id="architectures" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 bg-gray-50">
+        <div class="text-center mb-12">
+            <h3 class="text-3xl font-bold text-gray-900 mb-4">Architectural Patterns</h3>
+            <p class="text-lg text-gray-600">
+                The same Task Manager app, built 6 different ways
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for arch in architectures %}
+            <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
+                <!-- Status Badge -->
+                <div class="bg-{{ arch.color }}-500 px-4 py-2">
+                    <div class="flex justify-between items-center">
+                        <span class="text-white font-semibold">{{ arch.name }}</span>
+                        {% if arch.status == 'implemented' %}
+                        <span class="bg-green-400 text-green-900 px-2 py-1 rounded text-xs font-bold">LIVE</span>
+                        {% else %}
+                        <span class="bg-yellow-400 text-yellow-900 px-2 py-1 rounded text-xs font-bold">SOON</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Content -->
+                <div class="p-6">
+                    <p class="text-gray-600 mb-4">{{ arch.description }}</p>
+
+                    <div class="mb-4">
+                        <span class="text-sm font-semibold text-gray-700">Complexity:</span>
+                        <span class="ml-2 px-2 py-1 bg-gray-100 rounded text-sm">{{ arch.complexity }}</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="text-sm font-semibold text-gray-700 mb-2">When to use:</h5>
+                        <ul class="text-sm text-gray-600 space-y-1">
+                            {% for item in arch.when_to_use[:2] %}
+                            <li class="flex items-start">
+                                <span class="text-green-500 mr-2">✓</span>
+                                <span>{{ item }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                    <div class="flex space-x-2">
+                        <a href="/architecture/{{ arch.id }}" class="flex-1 bg-{{ arch.color }}-500 text-white px-4 py-2 rounded text-center hover:bg-{{ arch.color }}-600 transition text-sm font-semibold">
+                            Learn More
+                        </a>
+                        {% if arch.status == 'implemented' %}
+                        <a href="http://localhost:{{ arch.port }}" target="_blank" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition text-sm font-semibold">
+                            API
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Learning Resources -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div class="bg-blue-50 rounded-lg p-8">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Inspired by Industry Leaders</h3>
+            <p class="text-gray-700 mb-4">
+                This project is based on concepts from:
+            </p>
+            <ul class="space-y-2 text-gray-700">
+                <li class="flex items-center">
+                    <span class="text-blue-500 mr-2">📘</span>
+                    <span><strong>Fundamentals of Software Architecture</strong> by Mark Richards & Neal Ford</span>
+                </li>
+                <li class="flex items-center">
+                    <span class="text-blue-500 mr-2">📋</span>
+                    <span><strong>FINOS CALM</strong> - Common Architecture Language Model for documentation</span>
+                </li>
+                <li class="flex items-center">
+                    <span class="text-blue-500 mr-2">🎯</span>
+                    <span><strong>Domain-Driven Design</strong> principles applied consistently across patterns</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm">Architecture Patterns Playground</p>
+                    <p class="text-xs text-gray-400 mt-1">Learn by building, understand by comparing</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="https://github.com" class="text-gray-400 hover:text-white text-sm">GitHub</a>
+                    <a href="https://calm.finos.org" class="text-gray-400 hover:text-white text-sm">CALM Docs</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

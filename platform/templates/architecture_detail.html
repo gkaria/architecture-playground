@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ architecture.name }} - Architecture Patterns Playground</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-900">
+                        🏗️ Architecture Patterns Playground
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Home</a>
+                    <a href="/comparison" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Compare</a>
+                    <a href="https://github.com" target="_blank" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="bg-{{ architecture.color }}-500 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h2 class="text-4xl font-bold mb-4">{{ architecture.name }}</h2>
+                    <p class="text-xl text-{{ architecture.color }}-100">{{ architecture.description }}</p>
+                </div>
+                <div class="text-right">
+                    {% if architecture.status == 'implemented' %}
+                    <span class="bg-green-400 text-green-900 px-4 py-2 rounded-lg text-sm font-bold">IMPLEMENTED</span>
+                    <div class="mt-4">
+                        <a href="http://localhost:{{ architecture.port }}/docs" target="_blank" class="bg-white text-{{ architecture.color }}-600 px-6 py-2 rounded-lg font-semibold hover:bg-{{ architecture.color }}-50 transition inline-block">
+                            View API Docs
+                        </a>
+                    </div>
+                    {% else %}
+                    <span class="bg-yellow-400 text-yellow-900 px-4 py-2 rounded-lg text-sm font-bold">COMING SOON</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="grid md:grid-cols-2 gap-8 mb-12">
+            <!-- Pros -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-green-600 mb-4">✅ Advantages</h3>
+                <ul class="space-y-3">
+                    {% for pro in architecture.pros %}
+                    <li class="flex items-start">
+                        <span class="text-green-500 mr-3 mt-1">✓</span>
+                        <span class="text-gray-700">{{ pro }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <!-- Cons -->
+            <div class="bg-white rounded-lg shadow-md p-6">
+                <h3 class="text-2xl font-bold text-red-600 mb-4">⚠️ Disadvantages</h3>
+                <ul class="space-y-3">
+                    {% for con in architecture.cons %}
+                    <li class="flex items-start">
+                        <span class="text-red-500 mr-3 mt-1">✗</span>
+                        <span class="text-gray-700">{{ con }}</span>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+
+        <!-- When to Use -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-12">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">When to Use This Pattern</h3>
+            <div class="grid md:grid-cols-2 gap-4">
+                {% for item in architecture.when_to_use %}
+                <div class="flex items-start p-4 bg-{{ architecture.color }}-50 rounded">
+                    <span class="text-{{ architecture.color }}-500 mr-3">→</span>
+                    <span class="text-gray-700">{{ item }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Complexity Badge -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-12">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Complexity Rating</h3>
+            <div class="flex items-center">
+                <span class="text-6xl font-bold text-{{ architecture.color }}-500">{{ architecture.complexity }}</span>
+                <div class="ml-6">
+                    <p class="text-gray-600">
+                        {% if architecture.complexity == 'Low' %}
+                        This pattern is relatively simple to implement and understand. Great for getting started quickly.
+                        {% elif architecture.complexity == 'Medium' %}
+                        This pattern requires more upfront planning and discipline, but provides better organization and flexibility.
+                        {% else %}
+                        This pattern involves significant complexity and requires expertise in distributed systems. Choose carefully.
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Details -->
+        {% if architecture.status == 'implemented' %}
+        <div class="bg-white rounded-lg shadow-md p-6 mb-12">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Implementation Details</h3>
+            <div class="space-y-4">
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-2">Technology Stack</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1">
+                        <li>FastAPI (Python) for REST API</li>
+                        <li>SQLite for data persistence</li>
+                        <li>Pydantic for data validation</li>
+                        <li>In-memory caching for performance</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-2">Key Features</h4>
+                    <ul class="list-disc list-inside text-gray-700 space-y-1">
+                        <li>Complete CRUD operations for tasks</li>
+                        <li>User and project associations</li>
+                        <li>Status and priority management</li>
+                        <li>Tag-based organization</li>
+                        <li>Comprehensive error handling</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-gray-900 mb-2">API Endpoints</h4>
+                    <div class="bg-gray-50 p-4 rounded font-mono text-sm space-y-2">
+                        <div><span class="text-green-600">POST</span> /tasks - Create task</div>
+                        <div><span class="text-blue-600">GET</span> /tasks - List tasks</div>
+                        <div><span class="text-blue-600">GET</span> /tasks/{id} - Get task</div>
+                        <div><span class="text-yellow-600">PUT</span> /tasks/{id} - Update task</div>
+                        <div><span class="text-purple-600">PATCH</span> /tasks/{id}/status - Update status</div>
+                        <div><span class="text-red-600">DELETE</span> /tasks/{id} - Delete task</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALM Specification -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-12">
+            <h3 class="text-2xl font-bold text-gray-900 mb-4">Architecture Documentation (CALM)</h3>
+            <p class="text-gray-600 mb-4">
+                This architecture is documented using the FINOS Common Architecture Language Model (CALM).
+                CALM provides a standard way to describe software architectures in a machine-readable format.
+            </p>
+            <a href="/calm/{{ architecture.id }}" target="_blank" class="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600 transition inline-block">
+                View CALM Specification (JSON)
+            </a>
+        </div>
+        {% endif %}
+
+        <!-- Back Button -->
+        <div class="text-center">
+            <a href="/" class="bg-gray-200 text-gray-700 px-8 py-3 rounded-lg font-semibold hover:bg-gray-300 transition inline-block">
+                ← Back to All Patterns
+            </a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="text-sm">Architecture Patterns Playground</p>
+                    <p class="text-xs text-gray-400 mt-1">Learn by building, understand by comparing</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="https://github.com" class="text-gray-400 hover:text-white text-sm">GitHub</a>
+                    <a href="https://calm.finos.org" class="text-gray-400 hover:text-white text-sm">CALM Docs</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
