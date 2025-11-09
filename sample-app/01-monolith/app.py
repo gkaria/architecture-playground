@@ -8,6 +8,7 @@ from datetime import datetime
 from typing import Optional
 from pathlib import Path
 import sys
+import os
 
 sys.path.append(str(Path(__file__).parent.parent))
 from shared.domain import Task, TaskStatus, TaskPriority
@@ -67,14 +68,18 @@ app = FastAPI(
 )
 
 # Configure CORS to allow Task Manager UI to connect
+# Get CORS origins from environment variable (for production) or use localhost (for development)
+cors_origins_env = os.getenv("CORS_ORIGINS", "")
+cors_origins = cors_origins_env.split(",") if cors_origins_env else [
+    "http://localhost:9000",  # Task Manager UI (local)
+    "http://127.0.0.1:9000",
+    "http://localhost:8000",  # Learning Platform (local)
+    "http://127.0.0.1:8000",
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:9000",  # Task Manager UI
-        "http://127.0.0.1:9000",
-        "http://localhost:8000",  # Learning Platform
-        "http://127.0.0.1:8000",
-    ],
+    allow_origins=cors_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
