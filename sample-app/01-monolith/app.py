@@ -1,6 +1,6 @@
 """Monolithic Task Manager FastAPI application."""
 
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
@@ -8,10 +8,22 @@ from datetime import datetime
 from typing import Optional
 from pathlib import Path
 import sys
+import os
 
 sys.path.append(str(Path(__file__).parent.parent))
 from shared.domain import Task, TaskStatus, TaskPriority
 from database import Database
+from security import (
+    limiter,
+    get_cors_config,
+    sanitize_string,
+    sanitize_tags,
+    RATE_LIMIT_READ,
+    RATE_LIMIT_WRITE,
+    RATE_LIMIT_CREATE,
+)
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 
 # Pydantic models for request/response validation
@@ -66,19 +78,14 @@ app = FastAPI(
     version="1.0.0"
 )
 
+# Register rate limiter
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
 # Configure CORS to allow Task Manager UI to connect
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:9000",  # Task Manager UI
-        "http://127.0.0.1:9000",
-        "http://localhost:8000",  # Learning Platform
-        "http://127.0.0.1:8000",
-    ],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Using restrictive CORS configuration from security module
+cors_config = get_cors_config()
+app.add_middleware(CORSMiddleware, **cors_config)
 
 # Initialize database
 db = Database()
@@ -126,7 +133,8 @@ def invalidate_cache():
 
 
 @app.get("/")
-async def root():
+@limiter.limit(RATE_LIMIT_READ)
+async def root(request: Request):
     """Root endpoint."""
     return {
         "message": "Task Manager Monolith API",
@@ -136,16 +144,19 @@ async def root():
 
 
 @app.get("/health")
-async def health_check():
+@limiter.limit(RATE_LIMIT_READ)
+async def health_check(request: Request):
     """Health check endpoint."""
     return {"status": "healthy"}
 
 
 @app.post("/tasks", response_model=TaskResponse, status_code=201)
-async def create_task(task_data: TaskCreate):
+@limiter.limit(RATE_LIMIT_CREATE)
+async def create_task(request: Request, task_data: TaskCreate):
     """Create a new task.
 
     Args:
+        request: FastAPI request object (for rate limiting)
         task_data: Task creation data
 
     Returns:
@@ -155,15 +166,16 @@ async def create_task(task_data: TaskCreate):
         HTTPException: If creation fails
     """
     try:
+        # Sanitize user inputs to prevent XSS
         task = Task(
-            title=task_data.title,
-            description=task_data.description,
+            title=sanitize_string(task_data.title, max_length=200),
+            description=sanitize_string(task_data.description, max_length=2000),
             status=task_data.status,
             priority=task_data.priority,
             user_id=task_data.user_id,
             project_id=task_data.project_id,
             due_date=task_data.due_date,
-            tags=task_data.tags
+            tags=sanitize_tags(task_data.tags)
         )
 
         created_task = db.create_task(task)
@@ -176,10 +188,12 @@ async def create_task(task_data: TaskCreate):
 
 
 @app.get("/tasks", response_model=list[TaskResponse])
-async def get_tasks(user_id: Optional[int] = Query(None, gt=0)):
+@limiter.limit(RATE_LIMIT_READ)
+async def get_tasks(request: Request, user_id: Optional[int] = Query(None, gt=0)):
     """Get all tasks, optionally filtered by user_id.
 
     Args:
+        request: FastAPI request object (for rate limiting)
         user_id: Optional user ID to filter by
 
     Returns:
@@ -208,10 +222,12 @@ async def get_tasks(user_id: Optional[int] = Query(None, gt=0)):
 
 
 @app.get("/tasks/{task_id}", response_model=TaskResponse)
-async def get_task(task_id: int):
+@limiter.limit(RATE_LIMIT_READ)
+async def get_task(request: Request, task_id: int):
     """Get a single task by ID.
 
     Args:
+        request: FastAPI request object (for rate limiting)
         task_id: Task ID
 
     Returns:
@@ -235,10 +251,12 @@ async def get_task(task_id: int):
 
 
 @app.put("/tasks/{task_id}", response_model=TaskResponse)
-async def update_task(task_id: int, task_data: TaskUpdate):
+@limiter.limit(RATE_LIMIT_WRITE)
+async def update_task(request: Request, task_id: int, task_data: TaskUpdate):
     """Update an existing task.
 
     Args:
+        request: FastAPI request object (for rate limiting)
         task_id: Task ID to update
         task_data: Updated task data
 
@@ -254,18 +272,18 @@ async def update_task(task_id: int, task_data: TaskUpdate):
         if existing_task is None:
             raise HTTPException(status_code=404, detail=f"Task {task_id} not found")
 
-        # Create updated task object
+        # Create updated task object with sanitized inputs
         task = Task(
             id=task_id,
-            title=task_data.title,
-            description=task_data.description,
+            title=sanitize_string(task_data.title, max_length=200),
+            description=sanitize_string(task_data.description, max_length=2000),
             status=task_data.status,
             priority=task_data.priority,
             user_id=task_data.user_id,
             project_id=task_data.project_id,
             created_at=existing_task.created_at,
             due_date=task_data.due_date,
-            tags=task_data.tags
+            tags=sanitize_tags(task_data.tags)
         )
 
         updated_task = db.update_task(task_id, task)
@@ -280,10 +298,12 @@ async def update_task(task_id: int, task_data: TaskUpdate):
 
 
 @app.patch("/tasks/{task_id}/status", response_model=TaskResponse)
-async def update_task_status(task_id: int, status_data: TaskStatusUpdate):
+@limiter.limit(RATE_LIMIT_WRITE)
+async def update_task_status(request: Request, task_id: int, status_data: TaskStatusUpdate):
     """Update only the status of a task.
 
     Args:
+        request: FastAPI request object (for rate limiting)
         task_id: Task ID to update
         status_data: New status
 
@@ -310,10 +330,12 @@ async def update_task_status(task_id: int, status_data: TaskStatusUpdate):
 
 
 @app.delete("/tasks/{task_id}", status_code=204)
-async def delete_task(task_id: int):
+@limiter.limit(RATE_LIMIT_WRITE)
+async def delete_task(request: Request, task_id: int):
     """Delete a task.
 
     Args:
+        request: FastAPI request object (for rate limiting)
         task_id: Task ID to delete
 
     Raises:

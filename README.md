@@ -174,6 +174,50 @@ Visit http://localhost:9000 to use the Task Manager UI.
 
 ---
 
+## Security Notice
+
+This project implements **basic security features** suitable for portfolio and learning purposes:
+
+### ✅ Implemented Security Features
+- **Rate Limiting**: Prevents API abuse with different limits for read/write operations
+  - Read operations: 100 requests/minute
+  - Write operations: 30 requests/minute
+  - Create operations: 20 requests/minute
+- **Input Sanitization**: Prevents XSS attacks by sanitizing user inputs
+- **CORS Configuration**: Restrictive origin whitelisting (not wildcards)
+- **Request Size Limits**: Enforced via Pydantic validation (title: 200 chars, description: 2000 chars)
+
+### ⚠️ Not Suitable for Production
+
+**This is an educational project. For production use, you would need:**
+
+- **Authentication & Authorization**: User login, JWT tokens, role-based access control
+- **HTTPS/TLS Encryption**: All communications should be encrypted
+- **Database Security**:
+  - Switch from SQLite to PostgreSQL
+  - Use connection pooling
+  - Implement prepared statements (already done via ORM)
+  - Enable encryption at rest
+- **Advanced Rate Limiting**: Token bucket algorithm, per-user limits, DDoS protection
+- **Security Headers**: CSP, X-Frame-Options, HSTS, etc.
+- **Input Validation**: Schema validation beyond basic sanitization
+- **Logging & Monitoring**: Security event logging, intrusion detection
+- **API Gateway**: Centralized security, authentication, and rate limiting
+- **Secrets Management**: Vault for API keys, database credentials
+- **Vulnerability Scanning**: Regular dependency audits, penetration testing
+
+### 🔒 Security Best Practices
+
+For learning purposes, this project demonstrates:
+- How to integrate security libraries (slowapi, bleach)
+- Basic input sanitization patterns
+- CORS configuration for multi-origin support
+- Rate limiting implementation
+
+**Remember**: Never deploy educational code directly to production without a proper security audit and hardening.
+
+---
+
 ## Domain Model
 
 All implementations use the same Task Manager domain:

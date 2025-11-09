@@ -1,0 +1,63 @@
+# Render.com Blueprint for Architecture Patterns Playground
+# This file defines all services for one-click deployment
+
+services:
+  # 1. Learning Platform (Main Website)
+  - type: web
+    name: architecture-playground
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd platform && uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: API_URL
+        value: https://architecture-playground-api.onrender.com
+      - key: UI_URL
+        value: https://architecture-playground-ui.onrender.com
+    healthCheckPath: /
+    autoDeploy: true
+
+  # 2. Monolith API (Task Manager Backend)
+  - type: web
+    name: architecture-playground-api
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd sample-app/01-monolith && uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: CORS_ORIGINS
+        value: https://architecture-playground-ui.onrender.com,https://architecture-playground.onrender.com
+      - key: DATABASE_URL
+        sync: false  # Will use SQLite for now, can upgrade to PostgreSQL later
+    healthCheckPath: /
+    autoDeploy: true
+
+  # 3. Task Manager UI (Interactive Frontend)
+  - type: static
+    name: architecture-playground-ui
+    buildCommand: |
+      # Update API URL in JavaScript
+      sed -i "s|http://localhost:8001|https://architecture-playground-api.onrender.com|g" task-manager-ui/app.js
+      # Update platform link in HTML
+      sed -i "s|http://localhost:8000|https://architecture-playground.onrender.com|g" task-manager-ui/index.html
+    staticPublishPath: ./task-manager-ui
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate
+    autoDeploy: true
+
+# Database (optional, for future PostgreSQL upgrade)
+# databases:
+#   - name: architecture-playground-db
+#     plan: free
+#     databaseName: tasks
+#     user: tasks_user

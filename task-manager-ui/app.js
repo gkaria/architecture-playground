@@ -5,13 +5,46 @@
 
 // Configuration
 const ARCHITECTURES = {
-    monolith: { port: 8001, color: 'blue', name: 'Monolithic' },
-    'modular-monolith': { port: 8002, color: 'green', name: 'Modular Monolith' },
-    microservices: { port: 8003, color: 'purple', name: 'Microservices' },
-    'event-driven': { port: 8004, color: 'red', name: 'Event-Driven' },
-    layered: { port: 8005, color: 'yellow', name: 'Layered' },
-    'service-based': { port: 8006, color: 'indigo', name: 'Service-Based' }
+    monolith: {
+        port: 8001,
+        color: 'blue',
+        name: 'Monolithic',
+        prodUrl: 'https://architecture-playground-api.onrender.com'
+    },
+    'modular-monolith': {
+        port: 8002,
+        color: 'green',
+        name: 'Modular Monolith',
+        prodUrl: 'https://architecture-playground-api-modular.onrender.com'
+    },
+    microservices: {
+        port: 8003,
+        color: 'purple',
+        name: 'Microservices',
+        prodUrl: 'https://architecture-playground-api-micro.onrender.com'
+    },
+    'event-driven': {
+        port: 8004,
+        color: 'red',
+        name: 'Event-Driven',
+        prodUrl: 'https://architecture-playground-api-events.onrender.com'
+    },
+    layered: {
+        port: 8005,
+        color: 'yellow',
+        name: 'Layered',
+        prodUrl: 'https://architecture-playground-api-layered.onrender.com'
+    },
+    'service-based': {
+        port: 8006,
+        color: 'indigo',
+        name: 'Service-Based',
+        prodUrl: 'https://architecture-playground-api-service.onrender.com'
+    }
 };
+
+// Detect if running in production
+const isProduction = window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
 
 // State
 let currentArchitecture = 'monolith';
@@ -21,11 +54,25 @@ let tasks = [];
 // Get API base URL
 function getApiUrl() {
     const arch = ARCHITECTURES[currentArchitecture];
+
+    // In production, use the production URL; in development, use localhost
+    if (isProduction && arch.prodUrl) {
+        return arch.prodUrl;
+    }
+
     return `http://localhost:${arch.port}`;
 }
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
+    // Update platform link for production
+    if (isProduction) {
+        const platformLink = document.getElementById('platform-link');
+        if (platformLink) {
+            platformLink.href = 'https://architecture-playground.onrender.com';
+        }
+    }
+
     initializeEventListeners();
     loadTasks();
 });
