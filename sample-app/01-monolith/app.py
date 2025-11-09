@@ -1,6 +1,7 @@
 """Monolithic Task Manager FastAPI application."""
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 from datetime import datetime
@@ -63,6 +64,20 @@ app = FastAPI(
     title="Task Manager Monolith",
     description="A monolithic implementation of a Task Manager API",
     version="1.0.0"
+)
+
+# Configure CORS to allow Task Manager UI to connect
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:9000",  # Task Manager UI
+        "http://127.0.0.1:9000",
+        "http://localhost:8000",  # Learning Platform
+        "http://127.0.0.1:8000",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Initialize database
