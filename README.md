@@ -13,9 +13,21 @@ A portfolio and learning platform that teaches software architecture patterns th
 This project demonstrates how the **same application domain** (a Task Manager) can be implemented using different architectural patterns. Each implementation is:
 
 - ✅ **Fully working code** you can run and modify
+- ✅ **Interactive UI** that connects to different backend architectures
 - ✅ **Documented with CALM specs** (FINOS Common Architecture Language Model)
 - ✅ **Explained with ADRs** (Architecture Decision Records)
 - ✅ **Compared side-by-side** to understand trade-offs
+
+### 🎯 NEW: Interactive Task Manager UI
+
+Experience architecture patterns hands-on with a **common frontend** that connects to different backend implementations:
+
+- **Same UI, Different Backend** - Switch between architectures with a dropdown
+- **Performance Comparison** - See real-time response times
+- **Live Statistics** - Monitor task metrics across architectures
+- **Educational** - Learn how architecture is transparent to users
+
+Visit: **http://localhost:9000** (after starting the Task Manager UI server)
 
 ### The Goal
 
@@ -72,6 +84,12 @@ architecture-playground/
 │   │   ├── architecture_detail.html
 │   │   └── comparison.html
 │   └── static/
+│
+├── task-manager-ui/            # 🎯 NEW: Interactive Task Manager UI
+│   ├── index.html              # Main UI
+│   ├── app.js                  # JavaScript application
+│   ├── server.py               # Web server (Port 9000)
+│   └── README.md               # UI documentation
 │
 ├── sample-app/                 # Task Manager implementations
 │   ├── shared/
@@ -136,6 +154,23 @@ python app.py
 ```
 
 Visit http://localhost:8001/docs for the API documentation.
+
+### 4. Run the Interactive Task Manager UI (🎯 NEW!)
+
+In a new terminal:
+
+```bash
+cd task-manager-ui
+python server.py
+```
+
+Visit http://localhost:9000 to use the Task Manager UI.
+
+**Features:**
+- Create, update, and delete tasks
+- Switch between different backend architectures
+- See real-time performance metrics
+- Filter tasks by status
 
 ---
 

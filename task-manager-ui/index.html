@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager - Architecture Patterns Playground</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Architecture color mappings */
+        .bg-arch-blue { background-color: #3B82F6; }
+        .bg-arch-green { background-color: #10B981; }
+        .bg-arch-purple { background-color: #9333EA; }
+        .bg-arch-red { background-color: #EF4444; }
+        .bg-arch-yellow { background-color: #F59E0B; }
+        .bg-arch-indigo { background-color: #6366F1; }
+
+        /* Loading spinner */
+        .spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #3B82F6;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Fade in animation */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-gray-900">
+                        ✓ Task Manager
+                    </h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/home" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Back to Learning Platform</a>
+                    <a href="https://github.com/gkaria/architecture-playground" target="_blank" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">GitHub</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Architecture Selector Banner -->
+    <div class="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-bold mb-1">Interactive Task Manager</h2>
+                    <p class="text-blue-100 text-sm">Same UI, Different Architecture - Experience the difference</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                    <label for="architecture-selector" class="text-sm font-semibold">Backend Architecture:</label>
+                    <select id="architecture-selector" class="px-4 py-2 rounded-lg text-gray-900 font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-white">
+                        <option value="monolith" data-port="8001" data-color="blue">Monolithic (Port 8001)</option>
+                        <option value="modular-monolith" data-port="8002" data-color="green" disabled>Modular Monolith (Coming Soon)</option>
+                        <option value="microservices" data-port="8003" data-color="purple" disabled>Microservices (Coming Soon)</option>
+                        <option value="event-driven" data-port="8004" data-color="red" disabled>Event-Driven (Coming Soon)</option>
+                        <option value="layered" data-port="8005" data-color="yellow" disabled>Layered (Coming Soon)</option>
+                        <option value="service-based" data-port="8006" data-color="indigo" disabled>Service-Based (Coming Soon)</option>
+                    </select>
+                    <div class="flex items-center gap-2 px-3 py-2 bg-white bg-opacity-20 rounded-lg">
+                        <span class="text-xs font-medium">Response Time:</span>
+                        <span id="response-time" class="text-sm font-bold">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid lg:grid-cols-3 gap-8">
+            <!-- Create Task Form -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-lg shadow-md p-6 sticky top-8">
+                    <h3 class="text-xl font-bold text-gray-900 mb-4">Create New Task</h3>
+                    <form id="create-task-form" class="space-y-4">
+                        <div>
+                            <label for="task-title" class="block text-sm font-medium text-gray-700 mb-1">Title *</label>
+                            <input
+                                type="text"
+                                id="task-title"
+                                required
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter task title"
+                            >
+                        </div>
+                        <div>
+                            <label for="task-description" class="block text-sm font-medium text-gray-700 mb-1">Description *</label>
+                            <textarea
+                                id="task-description"
+                                required
+                                rows="3"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="Enter task description"
+                            ></textarea>
+                        </div>
+                        <div>
+                            <label for="task-priority" class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                            <select
+                                id="task-priority"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            >
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="task-tags" class="block text-sm font-medium text-gray-700 mb-1">Tags</label>
+                            <input
+                                type="text"
+                                id="task-tags"
+                                class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                placeholder="e.g., frontend, urgent (comma-separated)"
+                            >
+                        </div>
+                        <button
+                            type="submit"
+                            id="create-task-btn"
+                            class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition font-semibold flex items-center justify-center gap-2"
+                        >
+                            <span>Create Task</span>
+                        </button>
+                    </form>
+
+                    <!-- Stats -->
+                    <div class="mt-6 pt-6 border-t border-gray-200">
+                        <h4 class="text-sm font-semibold text-gray-700 mb-3">Statistics</h4>
+                        <div class="grid grid-cols-3 gap-3">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-blue-600" id="stat-total">0</div>
+                                <div class="text-xs text-gray-500">Total</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-yellow-600" id="stat-progress">0</div>
+                                <div class="text-xs text-gray-500">In Progress</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-green-600" id="stat-done">0</div>
+                                <div class="text-xs text-gray-500">Done</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Task List -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow-md p-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-xl font-bold text-gray-900">Tasks</h3>
+                        <button
+                            id="refresh-btn"
+                            class="text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+
+                    <!-- Filter Tabs -->
+                    <div class="flex gap-2 mb-4 border-b border-gray-200">
+                        <button class="filter-tab active px-4 py-2 font-medium text-sm border-b-2 border-blue-600 text-blue-600" data-filter="all">
+                            All
+                        </button>
+                        <button class="filter-tab px-4 py-2 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-filter="todo">
+                            To Do
+                        </button>
+                        <button class="filter-tab px-4 py-2 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-filter="in_progress">
+                            In Progress
+                        </button>
+                        <button class="filter-tab px-4 py-2 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700" data-filter="done">
+                            Done
+                        </button>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="loading-state" class="hidden text-center py-12">
+                        <div class="spinner mx-auto mb-3"></div>
+                        <p class="text-gray-500">Loading tasks...</p>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="empty-state" class="hidden text-center py-12">
+                        <div class="text-gray-400 mb-3">
+                            <svg class="w-16 h-16 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>
+                            </svg>
+                        </div>
+                        <p class="text-gray-500 font-medium">No tasks yet</p>
+                        <p class="text-gray-400 text-sm mt-1">Create your first task to get started</p>
+                    </div>
+
+                    <!-- Error State -->
+                    <div id="error-state" class="hidden">
+                        <div class="bg-red-50 border border-red-200 rounded-lg p-4 text-center">
+                            <div class="text-red-600 font-medium mb-1">Failed to connect to API</div>
+                            <div class="text-red-500 text-sm" id="error-message"></div>
+                            <button onclick="location.reload()" class="mt-3 text-red-600 hover:text-red-700 font-medium text-sm underline">
+                                Try Again
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Task List Container -->
+                    <div id="task-list" class="space-y-3"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="hidden fixed bottom-4 right-4 bg-gray-900 text-white px-6 py-3 rounded-lg shadow-lg z-50 fade-in">
+        <div class="flex items-center gap-2">
+            <span id="toast-message"></span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
