@@ -14,7 +14,7 @@ A portfolio and learning platform that teaches software architecture patterns th
 
 - **🌐 Learning Platform**: [https://architecture-playground.onrender.com](https://architecture-playground.onrender.com)
 - **✓ Task Manager UI**: [https://architecture-playground-ui.onrender.com](https://architecture-playground-ui.onrender.com)
-- **🔧 Monolith API**: [https://architecture-playground-api.onrender.com](https://architecture-playground-api.onrender.com)
+- **🔧 Monolith API Docs**: [https://architecture-playground-api.onrender.com/docs](https://architecture-playground-api.onrender.com/docs)
 
 > **Note**: Free tier services may take 30-60 seconds to wake up on first visit.
 
