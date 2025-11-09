@@ -33,7 +33,7 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="/" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                    <a href="http://localhost:9000" target="_blank" class="text-green-600 hover:text-green-700 px-3 py-2 rounded-md text-sm font-medium">✓ Demo</a>
+                    <a href="{{ ui_url }}" target="_blank" class="text-green-600 hover:text-green-700 px-3 py-2 rounded-md text-sm font-medium">✓ Demo</a>
                     <a href="/comparison" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Compare</a>
                     <a href="https://github.com/gkaria/architecture-playground" target="_blank" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">GitHub</a>
                 </div>
@@ -54,7 +54,7 @@
                     and level up your architectural thinking.
                 </p>
                 <div class="flex justify-center flex-wrap gap-4">
-                    <a href="http://localhost:9000" target="_blank" class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition flex items-center gap-2">
+                    <a href="{{ ui_url }}" target="_blank" class="bg-green-500 text-white px-8 py-3 rounded-lg font-semibold hover:bg-green-600 transition flex items-center gap-2">
                         <span>✓</span>
                         <span>Try Interactive Demo</span>
                     </a>
@@ -160,7 +160,7 @@
                             Learn More
                         </a>
                         {% if arch.status == 'implemented' %}
-                        <a href="http://localhost:{{ arch.port }}" target="_blank" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition text-sm font-semibold">
+                        <a href="{{ get_api_url(arch.port) }}" target="_blank" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition text-sm font-semibold">
                             API
                         </a>
                         {% endif %}
