@@ -8,6 +8,18 @@ A portfolio and learning platform that teaches software architecture patterns th
 
 ---
 
+## 🚀 Live Demo
+
+**Try it now - no installation required!**
+
+- **🌐 Learning Platform**: [https://architecture-playground.onrender.com](https://architecture-playground.onrender.com)
+- **✓ Task Manager UI**: [https://architecture-playground-ui.onrender.com](https://architecture-playground-ui.onrender.com)
+- **🔧 Monolith API**: [https://architecture-playground-api.onrender.com](https://architecture-playground-api.onrender.com)
+
+> **Note**: Free tier services may take 30-60 seconds to wake up on first visit.
+
+---
+
 ## What is This?
 
 This project demonstrates how the **same application domain** (a Task Manager) can be implemented using different architectural patterns. Each implementation is:
