@@ -4,8 +4,6 @@
 
 A portfolio and learning platform that teaches software architecture patterns through practical implementations of a Task Manager application built in 6 different architectural styles.
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-
 ---
 
 ## What is This?
@@ -370,25 +368,6 @@ render deploy
 
 ---
 
-## Contributing
-
-This is a learning project, but contributions are welcome!
-
-### Areas for Improvement
-- Additional architecture patterns
-- Better visualizations
-- More detailed comparisons
-- Test coverage
-- Deployment guides
-
-### How to Contribute
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
----
-
 ## Inspiration and References
 
 ### Books
@@ -407,13 +386,7 @@ This is a learning project, but contributions are welcome!
 
 ---
 
-## License
-
-MIT License - See LICENSE file for details
-
----
-
-## Author
+## About This Project
 
 **Architecture Patterns Playground**
 
