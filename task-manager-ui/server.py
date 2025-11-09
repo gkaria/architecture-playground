@@ -5,7 +5,8 @@ import socketserver
 import os
 
 # Configuration
-PORT = 9000
+# Use PORT from environment (for Render/production) or default to 9000 (for local)
+PORT = int(os.getenv("PORT", 9000))
 DIRECTORY = os.path.dirname(os.path.abspath(__file__))
 
 
