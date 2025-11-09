@@ -5,6 +5,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pathlib import Path
+import os
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -17,6 +18,20 @@ app = FastAPI(
 BASE_DIR = Path(__file__).resolve().parent
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 app.mount("/static", StaticFiles(directory=str(BASE_DIR / "static")), name="static")
+
+# Environment-aware URL configuration
+def get_ui_url() -> str:
+    """Get Task Manager UI URL based on environment."""
+    ui_url = os.getenv("UI_URL", "")
+    return ui_url if ui_url else "http://localhost:9000"
+
+def get_api_url(port: int) -> str:
+    """Get API URL for a specific architecture based on environment."""
+    api_url = os.getenv("API_URL", "")
+    if api_url:
+        # In production, all architectures use the same API URL (currently only monolith)
+        return api_url
+    return f"http://localhost:{port}"
 
 
 # Architecture patterns data
@@ -187,7 +202,9 @@ async def home(request: Request):
         "home.html",
         {
             "request": request,
-            "architectures": ARCHITECTURES
+            "architectures": ARCHITECTURES,
+            "ui_url": get_ui_url(),
+            "get_api_url": get_api_url
         }
     )
 
