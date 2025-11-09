@@ -225,7 +225,9 @@ async def architecture_detail(request: Request, arch_id: str):
         "architecture_detail.html",
         {
             "request": request,
-            "architecture": architecture
+            "architecture": architecture,
+            "ui_url": get_ui_url(),
+            "get_api_url": get_api_url
         }
     )
 
@@ -237,7 +239,8 @@ async def comparison(request: Request):
         "comparison.html",
         {
             "request": request,
-            "architectures": ARCHITECTURES
+            "architectures": ARCHITECTURES,
+            "ui_url": get_ui_url()
         }
     )
 

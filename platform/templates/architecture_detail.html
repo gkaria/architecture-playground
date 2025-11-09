@@ -39,7 +39,7 @@
                 </div>
                 <div class="flex items-center space-x-4">
                     <a href="/" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Home</a>
-                    <a href="http://localhost:9000" target="_blank" class="text-green-600 hover:text-green-700 px-3 py-2 rounded-md text-sm font-medium">✓ Demo</a>
+                    <a href="{{ ui_url }}" target="_blank" class="text-green-600 hover:text-green-700 px-3 py-2 rounded-md text-sm font-medium">✓ Demo</a>
                     <a href="/comparison" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Compare</a>
                     <a href="https://github.com/gkaria/architecture-playground" target="_blank" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">GitHub</a>
                 </div>
@@ -59,7 +59,7 @@
                     {% if architecture.status == 'implemented' %}
                     <span class="bg-green-400 text-green-900 px-4 py-2 rounded-lg text-sm font-bold">IMPLEMENTED</span>
                     <div class="mt-4">
-                        <a href="http://localhost:{{ architecture.port }}/docs" target="_blank" class="bg-white text-arch-{{ architecture.color }} px-6 py-2 rounded-lg font-semibold hover:bg-arch-{{ architecture.color }}-light transition inline-block">
+                        <a href="{{ get_api_url(architecture.port) }}/docs" target="_blank" class="bg-white text-arch-{{ architecture.color }} px-6 py-2 rounded-lg font-semibold hover:bg-arch-{{ architecture.color }}-light transition inline-block">
                             View API Docs
                         </a>
                     </div>
