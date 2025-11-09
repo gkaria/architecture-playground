@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Architecture Patterns Playground</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Color mappings for architecture cards */
+        .bg-arch-blue { background-color: #3B82F6; }
+        .bg-arch-green { background-color: #10B981; }
+        .bg-arch-purple { background-color: #9333EA; }
+        .bg-arch-red { background-color: #EF4444; }
+        .bg-arch-yellow { background-color: #F59E0B; }
+        .bg-arch-indigo { background-color: #6366F1; }
+        .hover-arch-blue:hover { background-color: #2563EB; }
+        .hover-arch-green:hover { background-color: #059669; }
+        .hover-arch-purple:hover { background-color: #7C3AED; }
+        .hover-arch-red:hover { background-color: #DC2626; }
+        .hover-arch-yellow:hover { background-color: #D97706; }
+        .hover-arch-indigo:hover { background-color: #4F46E5; }
+    </style>
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
@@ -96,7 +111,7 @@
             {% for arch in architectures %}
             <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition">
                 <!-- Status Badge -->
-                <div class="bg-{{ arch.color }}-500 px-4 py-2">
+                <div class="bg-arch-{{ arch.color }} px-4 py-2">
                     <div class="flex justify-between items-center">
                         <span class="text-white font-semibold">{{ arch.name }}</span>
                         {% if arch.status == 'implemented' %}
@@ -129,7 +144,7 @@
                     </div>
 
                     <div class="flex space-x-2">
-                        <a href="/architecture/{{ arch.id }}" class="flex-1 bg-{{ arch.color }}-500 text-white px-4 py-2 rounded text-center hover:bg-{{ arch.color }}-600 transition text-sm font-semibold">
+                        <a href="/architecture/{{ arch.id }}" class="flex-1 bg-arch-{{ arch.color }} hover-arch-{{ arch.color }} text-white px-4 py-2 rounded text-center transition text-sm font-semibold">
                             Learn More
                         </a>
                         {% if arch.status == 'implemented' %}

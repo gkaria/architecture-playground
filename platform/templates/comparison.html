@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Architecture Comparison - Architecture Patterns Playground</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Color mappings for architecture cards */
+        .text-arch-blue { color: #3B82F6; }
+        .text-arch-green { color: #10B981; }
+        .text-arch-purple { color: #9333EA; }
+        .text-arch-red { color: #EF4444; }
+        .text-arch-yellow { color: #F59E0B; }
+        .text-arch-indigo { color: #6366F1; }
+        .text-arch-blue-dark { color: #1E40AF; }
+        .text-arch-green-dark { color: #047857; }
+        .text-arch-purple-dark { color: #6B21A8; }
+        .text-arch-red-dark { color: #B91C1C; }
+        .text-arch-yellow-dark { color: #B45309; }
+        .text-arch-indigo-dark { color: #3730A3; }
+    </style>
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
@@ -50,7 +65,7 @@
                     {% for arch in architectures %}
                     <tr class="hover:bg-gray-50">
                         <td class="px-6 py-4">
-                            <a href="/architecture/{{ arch.id }}" class="text-{{ arch.color }}-600 font-semibold hover:text-{{ arch.color }}-800">
+                            <a href="/architecture/{{ arch.id }}" class="text-arch-{{ arch.color }} font-semibold hover:text-arch-{{ arch.color }}-dark">
                                 {{ arch.name }}
                             </a>
                         </td>
