@@ -12,6 +12,7 @@ This is a **monolithic** architecture where all components (API, business logic,
 - **Shared Database**: All features access the same SQLite database
 - **In-Memory Caching**: Simple cache for frequently accessed data
 - **Synchronous Communication**: Direct function calls between components
+- **CORS-Enabled**: Allows connections from Task Manager UI (port 9000)
 
 ### Pros
 
@@ -60,7 +61,26 @@ uvicorn app:app --reload --port 8001
 
 The API will be available at `http://localhost:8001`
 
-## Example Usage
+**Swagger UI**: Visit `http://localhost:8001/docs` for interactive API documentation
+
+## Using with Task Manager UI
+
+This API is designed to work with the **Interactive Task Manager UI** (port 9000).
+
+```bash
+# 1. Start this API (in one terminal)
+python app.py
+
+# 2. Start the Task Manager UI (in another terminal)
+cd ../../task-manager-ui
+python server.py
+
+# 3. Visit http://localhost:9000 and select "Monolithic" from the dropdown
+```
+
+The API includes CORS configuration to allow requests from the UI on port 9000.
+
+## Example Usage (via curl)
 
 ```bash
 # Create a task
