@@ -5,6 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ architecture.name }} - Architecture Patterns Playground</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Color mappings for architecture cards */
+        .bg-arch-blue { background-color: #3B82F6; }
+        .bg-arch-green { background-color: #10B981; }
+        .bg-arch-purple { background-color: #9333EA; }
+        .bg-arch-red { background-color: #EF4444; }
+        .bg-arch-yellow { background-color: #F59E0B; }
+        .bg-arch-indigo { background-color: #6366F1; }
+        .text-arch-blue { color: #3B82F6; }
+        .text-arch-green { color: #10B981; }
+        .text-arch-purple { color: #9333EA; }
+        .text-arch-red { color: #EF4444; }
+        .text-arch-yellow { color: #F59E0B; }
+        .text-arch-indigo { color: #6366F1; }
+        .bg-arch-blue-light { background-color: #EFF6FF; }
+        .bg-arch-green-light { background-color: #ECFDF5; }
+        .bg-arch-purple-light { background-color: #FAF5FF; }
+        .bg-arch-red-light { background-color: #FEF2F2; }
+        .bg-arch-yellow-light { background-color: #FFFBEB; }
+        .bg-arch-indigo-light { background-color: #EEF2FF; }
+    </style>
 </head>
 <body class="bg-gray-50">
     <!-- Navigation -->
@@ -26,18 +47,18 @@
     </nav>
 
     <!-- Header -->
-    <div class="bg-{{ architecture.color }}-500 text-white">
+    <div class="bg-arch-{{ architecture.color }} text-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
             <div class="flex justify-between items-start">
                 <div>
                     <h2 class="text-4xl font-bold mb-4">{{ architecture.name }}</h2>
-                    <p class="text-xl text-{{ architecture.color }}-100">{{ architecture.description }}</p>
+                    <p class="text-xl opacity-90">{{ architecture.description }}</p>
                 </div>
                 <div class="text-right">
                     {% if architecture.status == 'implemented' %}
                     <span class="bg-green-400 text-green-900 px-4 py-2 rounded-lg text-sm font-bold">IMPLEMENTED</span>
                     <div class="mt-4">
-                        <a href="http://localhost:{{ architecture.port }}/docs" target="_blank" class="bg-white text-{{ architecture.color }}-600 px-6 py-2 rounded-lg font-semibold hover:bg-{{ architecture.color }}-50 transition inline-block">
+                        <a href="http://localhost:{{ architecture.port }}/docs" target="_blank" class="bg-white text-arch-{{ architecture.color }} px-6 py-2 rounded-lg font-semibold hover:bg-arch-{{ architecture.color }}-light transition inline-block">
                             View API Docs
                         </a>
                     </div>
@@ -84,8 +105,8 @@
             <h3 class="text-2xl font-bold text-gray-900 mb-4">When to Use This Pattern</h3>
             <div class="grid md:grid-cols-2 gap-4">
                 {% for item in architecture.when_to_use %}
-                <div class="flex items-start p-4 bg-{{ architecture.color }}-50 rounded">
-                    <span class="text-{{ architecture.color }}-500 mr-3">→</span>
+                <div class="flex items-start p-4 bg-arch-{{ architecture.color }}-light rounded">
+                    <span class="text-arch-{{ architecture.color }} mr-3">→</span>
                     <span class="text-gray-700">{{ item }}</span>
                 </div>
                 {% endfor %}
@@ -96,7 +117,7 @@
         <div class="bg-white rounded-lg shadow-md p-6 mb-12">
             <h3 class="text-2xl font-bold text-gray-900 mb-4">Complexity Rating</h3>
             <div class="flex items-center">
-                <span class="text-6xl font-bold text-{{ architecture.color }}-500">{{ architecture.complexity }}</span>
+                <span class="text-6xl font-bold text-arch-{{ architecture.color }}">{{ architecture.complexity }}</span>
                 <div class="ml-6">
                     <p class="text-gray-600">
                         {% if architecture.complexity == 'Low' %}
