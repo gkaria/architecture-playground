@@ -37,22 +37,16 @@ services:
     autoDeploy: true
 
   # 3. Task Manager UI (Interactive Frontend)
-  - type: static
+  - type: web
     name: architecture-playground-ui
-    buildCommand: |
-      # Update API URL in JavaScript
-      sed -i "s|http://localhost:8001|https://architecture-playground-api.onrender.com|g" task-manager-ui/app.js
-      # Update platform link in HTML
-      sed -i "s|http://localhost:8000|https://architecture-playground.onrender.com|g" task-manager-ui/index.html
-    staticPublishPath: ./task-manager-ui
-    routes:
-      - type: rewrite
-        source: /*
-        destination: /index.html
-    headers:
-      - path: /*
-        name: Cache-Control
-        value: public, max-age=0, must-revalidate
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd task-manager-ui && python server.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    healthCheckPath: /
     autoDeploy: true
 
 # Database (optional, for future PostgreSQL upgrade)
