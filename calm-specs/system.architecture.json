@@ -1,0 +1,582 @@
+{
+  "$schema": "https://calm.finos.org/release/1.0/meta/calm.json",
+  "unique-id": "architecture-playground",
+  "name": "Architecture Patterns Playground",
+  "description": "An educational portfolio platform demonstrating six different software architectural patterns (Monolith, Modular Monolith, Microservices, Event-Driven, Layered, Service-Based) with a common Task Manager application domain, shared CALM documentation, and interactive comparison tools.",
+  "metadata": [
+    {
+      "version": "1.0.0",
+      "created-by": "Gaurang Karia",
+      "created-date": "2025-11-11",
+      "purpose": "Educational - Learn architectural patterns through working implementations",
+      "domain": "Task Management",
+      "technologies": [
+        "Python/FastAPI",
+        "SQLite",
+        "Vanilla JavaScript",
+        "Tailwind CSS",
+        "FINOS CALM"
+      ],
+      "deployment": "Render.com (Free Tier)",
+      "environment": "Development"
+    }
+  ],
+  "nodes": [
+    {
+      "unique-id": "developer",
+      "node-type": "actor",
+      "name": "Developer / Learner",
+      "description": "Software developer or student learning different architectural patterns"
+    },
+    {
+      "unique-id": "browser",
+      "node-type": "actor",
+      "name": "Web Browser",
+      "description": "Client device running web browser (Chrome, Safari, Firefox, etc.)",
+      "interfaces": []
+    },
+    {
+      "unique-id": "learning-platform",
+      "node-type": "service",
+      "name": "Learning Platform",
+      "description": "FastAPI web service providing educational content about architectural patterns, pattern explanations, architecture detail pages, and comparison views. Serves Jinja2 templates with Tailwind CSS styling.",
+      "metadata": {
+        "port": 8000,
+        "framework": "FastAPI",
+        "templating": "Jinja2",
+        "styling": "Tailwind CSS (CDN)",
+        "responsibility": "Educational homepage, pattern documentation, comparison interface",
+        "environment-aware": "Routes to UI and API based on env variables (API_URL, UI_URL)"
+      },
+      "interfaces": [
+        {
+          "unique-id": "learning-platform-http",
+          "port": 8000,
+          "protocol": "HTTP",
+          "host": "localhost",
+          "path": "/"
+        }
+      ]
+    },
+    {
+      "unique-id": "task-manager-ui",
+      "node-type": "webclient",
+      "name": "Task Manager UI",
+      "description": "Frontend web application providing interactive task management interface. Features architecture selector dropdown, real-time performance metrics, CRUD operations, and filtering. Built with vanilla JavaScript (no frameworks) for educational simplicity.",
+      "metadata": {
+        "port": 9000,
+        "framework": "Vanilla JavaScript",
+        "styling": "Tailwind CSS (CDN)",
+        "responsibility": "User-facing task management UI with architecture switching capability",
+        "features": [
+          "Architecture selector dropdown",
+          "Real-time performance metrics",
+          "Task CRUD operations",
+          "Filtering and search",
+          "Live statistics"
+        ],
+        "dynamic-api-detection": "localhost in dev, production URLs when deployed"
+      },
+      "interfaces": [
+        {
+          "unique-id": "task-manager-ui-http",
+          "port": 9000,
+          "protocol": "HTTP",
+          "host": "localhost",
+          "path": "/"
+        }
+      ]
+    },
+    {
+      "unique-id": "monolith-api",
+      "node-type": "service",
+      "name": "Monolith API",
+      "description": "FastAPI REST API implementing a monolithic architecture. Provides 6 CRUD endpoints for task management. Features SQLite database, in-memory caching (60s TTL), CORS middleware, and rate limiting.",
+      "metadata": {
+        "port": 8001,
+        "framework": "FastAPI",
+        "pattern": "Monolithic Architecture",
+        "database": "SQLite",
+        "caching": "In-memory cache with 60 second TTL",
+        "endpoints": [
+          "POST /tasks - Create task",
+          "GET /tasks - List tasks (with optional user_id filter)",
+          "GET /tasks/{id} - Get single task",
+          "PUT /tasks/{id} - Full update",
+          "PATCH /tasks/{id}/status - Status-only update",
+          "DELETE /tasks/{id} - Delete task",
+          "GET /health - Health check"
+        ],
+        "rate-limits": {
+          "read": "100/minute",
+          "write": "30/minute",
+          "create": "20/minute"
+        },
+        "security": [
+          "Input sanitization (bleach library)",
+          "CORS middleware (restrictive whitelist)",
+          "Rate limiting per IP"
+        ]
+      },
+      "interfaces": [
+        {
+          "unique-id": "monolith-api-http",
+          "port": 8001,
+          "protocol": "HTTP",
+          "host": "localhost",
+          "path": "/api/v1"
+        },
+        {
+          "unique-id": "monolith-swagger-ui",
+          "port": 8001,
+          "protocol": "HTTP",
+          "host": "localhost",
+          "path": "/docs"
+        }
+      ]
+    },
+    {
+      "unique-id": "monolith-database",
+      "node-type": "database",
+      "name": "SQLite Database (Monolith)",
+      "description": "SQLite database file (tasks.db) storing all task, user, and project data. Implements relational schema with transactions, parameterized queries, and automatic connection management.",
+      "metadata": {
+        "technology": "SQLite",
+        "filename": "tasks.db",
+        "tables": [
+          "tasks",
+          "users",
+          "projects"
+        ],
+        "connection-pattern": "Context manager with auto-commit/rollback",
+        "timestamp-format": "ISO format strings",
+        "persistence": "File-based on disk"
+      },
+      "interfaces": [
+        {
+          "unique-id": "monolith-db-interface",
+          "type": "JDBC",
+          "path": "tasks.db"
+        }
+      ]
+    },
+    {
+      "unique-id": "shared-domain-models",
+      "node-type": "data-asset",
+      "name": "Shared Domain Models",
+      "description": "Reusable Python domain models (Task, User, Project) shared across all 6 architectural implementations. Ensures consistent entity definitions and behavior across patterns. Located in sample-app/shared/domain/.",
+      "metadata": {
+        "location": "sample-app/shared/domain/",
+        "models": [
+          "Task (id, title, description, status, priority, user_id, project_id, created_at, updated_at, due_date, tags)",
+          "User (id, username, email, full_name)",
+          "Project (id, name, description, owner_id, members)"
+        ],
+        "enums": [
+          "TaskStatus (todo, in_progress, done)",
+          "TaskPriority (low, medium, high)"
+        ],
+        "serialization": "to_dict(), from_dict() methods for boundary crossing",
+        "versioning": "Unchanged across all 6 implementations for fair comparison"
+      }
+    },
+    {
+      "unique-id": "calm-specifications",
+      "node-type": "data-asset",
+      "name": "CALM Architecture Specifications",
+      "description": "FINOS CALM (Common Architecture Language Model) JSON documents describing each architectural pattern. Provides machine-readable architecture documentation for comparison and learning.",
+      "interfaces": [],
+      "metadata": {
+        "location": "calm-specs/",
+        "format": "JSON",
+        "schema": "CALM v1.0",
+        "patterns-documented": [
+          "monolith",
+          "modular-monolith",
+          "microservices",
+          "event-driven",
+          "layered",
+          "service-based"
+        ],
+        "validation": "Validates against CALM JSON schema"
+      }
+    },
+    {
+      "unique-id": "architecture-decision-records",
+      "node-type": "data-asset",
+      "name": "Architecture Decision Records (ADRs)",
+      "description": "Markdown documents recording architectural decisions using the ADR format. Explains the 'why' behind pattern choices, trade-offs, and consequences.",
+      "metadata": {
+        "location": "docs/ADRs/",
+        "format": "Markdown",
+        "template": "Status, Context, Decision, Consequences format",
+        "decisions-recorded": [
+          "ADR-001: Why start with monolithic architecture"
+        ]
+      }
+    }
+  ],
+  "relationships": [
+    {
+      "unique-id": "developer-uses-browser",
+      "description": "Developer accesses learning platform and task manager through web browser",
+      "relationship-type": {
+        "interacts": {
+          "actor": "developer",
+          "nodes": [
+            "browser"
+          ]
+        }
+      }
+    },
+    {
+      "unique-id": "browser-to-learning-platform",
+      "description": "Browser sends HTTP requests to learning platform homepage and detail pages",
+      "relationship-type": {
+        "connects": {
+          "source": {
+            "node": "browser"
+          },
+          "destination": {
+            "node": "learning-platform",
+            "interfaces": [
+              "learning-platform-http"
+            ]
+          }
+        }
+      },
+      "protocol": "HTTP"
+    },
+    {
+      "unique-id": "learning-platform-routes-to-ui",
+      "description": "Learning platform provides links to task manager UI for interactive demo",
+      "relationship-type": {
+        "interacts": {
+          "actor": "learning-platform",
+          "nodes": [
+            "task-manager-ui"
+          ]
+        }
+      },
+      "metadata": {
+        "mechanism": "URL redirection in HTML links",
+        "purpose": "Educational navigation to interactive demo"
+      }
+    },
+    {
+      "unique-id": "browser-to-task-manager-ui",
+      "description": "Browser loads and interacts with task manager UI application",
+      "relationship-type": {
+        "connects": {
+          "source": {
+            "node": "browser"
+          },
+          "destination": {
+            "node": "task-manager-ui",
+            "interfaces": [
+              "task-manager-ui-http"
+            ]
+          }
+        }
+      },
+      "protocol": "HTTP"
+    },
+    {
+      "unique-id": "task-manager-ui-to-monolith-api",
+      "description": "Task manager UI sends CRUD operations via REST API calls to monolith backend",
+      "relationship-type": {
+        "connects": {
+          "source": {
+            "node": "task-manager-ui"
+          },
+          "destination": {
+            "node": "monolith-api",
+            "interfaces": [
+              "monolith-api-http"
+            ]
+          }
+        }
+      },
+      "protocol": "HTTP",
+      "metadata": {
+        "content-type": "application/json",
+        "operations": [
+          "Create (POST)",
+          "Read (GET)",
+          "Update (PUT/PATCH)",
+          "Delete (DELETE)"
+        ],
+        "cors": "Enabled with restrictive whitelist"
+      }
+    },
+    {
+      "unique-id": "learning-platform-to-monolith-api",
+      "description": "Learning platform reads API documentation and CALM specs from monolith",
+      "relationship-type": {
+        "connects": {
+          "source": {
+            "node": "learning-platform"
+          },
+          "destination": {
+            "node": "monolith-api",
+            "interfaces": [
+              "monolith-swagger-ui"
+            ]
+          }
+        }
+      },
+      "protocol": "HTTP",
+      "metadata": {
+        "purpose": "Educational - show API documentation to learners",
+        "endpoint": "/docs (Swagger UI)"
+      }
+    },
+    {
+      "unique-id": "monolith-api-to-database",
+      "description": "Monolith API performs CRUD operations on SQLite database with caching layer",
+      "relationship-type": {
+        "connects": {
+          "source": {
+            "node": "monolith-api"
+          },
+          "destination": {
+            "node": "monolith-database",
+            "interfaces": [
+              "monolith-db-interface"
+            ]
+          }
+        }
+      },
+      "protocol": "JDBC",
+      "metadata": {
+        "caching": "60-second TTL in-memory cache for /tasks queries",
+        "cache-invalidation": "On create/update/delete operations",
+        "transactions": "Automatic rollback on exceptions",
+        "parameterization": "Prepared statements for SQL injection prevention"
+      }
+    },
+    {
+      "unique-id": "monolith-api-uses-shared-domain",
+      "description": "Monolith API imports and uses shared domain models for serialization",
+      "relationship-type": {
+        "interacts": {
+          "actor": "monolith-api",
+          "nodes": [
+            "shared-domain-models"
+          ]
+        }
+      },
+      "metadata": {
+        "purpose": "Entity serialization/deserialization across API boundaries"
+      }
+    },
+    {
+      "unique-id": "documentation-references-domain",
+      "description": "CALM specs and ADRs reference shared domain models for consistency",
+      "relationship-type": {
+        "interacts": {
+          "actor": "calm-specifications",
+          "nodes": [
+            "shared-domain-models"
+          ]
+        }
+      }
+    },
+    {
+      "unique-id": "platform-serves-calm-specs",
+      "description": "Learning platform serves CALM specification files from calm-specs/ directory",
+      "relationship-type": {
+        "connects": {
+          "source": {
+            "node": "learning-platform"
+          },
+          "destination": {
+            "node": "calm-specifications"
+          }
+        }
+      },
+      "metadata": {
+        "endpoint": "/calm/{arch_id}",
+        "format": "JSON",
+        "purpose": "Educational - display architecture specs to learners"
+      }
+    },
+    {
+      "unique-id": "platform-references-adrs",
+      "description": "Learning platform links to Architecture Decision Records for educational context",
+      "relationship-type": {
+        "interacts": {
+          "actor": "learning-platform",
+          "nodes": [
+            "architecture-decision-records"
+          ]
+        }
+      }
+    }
+  ],
+  "flows": [
+    {
+      "unique-id": "developer-learning-flow",
+      "name": "Developer Learning Flow",
+      "description": "A developer explores the architecture patterns playground by viewing educational content, comparing different patterns, and interacting with the task manager UI to understand architectural differences.",
+      "transitions": [
+        {
+          "relationship-unique-id": "developer-uses-browser",
+          "sequence-number": 1,
+          "description": "Developer opens web browser and navigates to platform",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "browser-to-learning-platform",
+          "sequence-number": 2,
+          "description": "Browser loads learning platform homepage with pattern overview",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "platform-serves-calm-specs",
+          "sequence-number": 3,
+          "description": "Platform displays CALM architecture specifications and pattern documentation",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "platform-references-adrs",
+          "sequence-number": 4,
+          "description": "Platform shows Architecture Decision Records explaining 'why' behind choices",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "learning-platform-routes-to-ui",
+          "sequence-number": 5,
+          "description": "Platform provides link to interactive task manager for hands-on learning",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "browser-to-task-manager-ui",
+          "sequence-number": 6,
+          "description": "Browser loads task manager UI",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "task-manager-ui-to-monolith-api",
+          "sequence-number": 7,
+          "description": "Task manager UI connects to monolith API (via architecture selector)",
+          "direction": "source-to-destination"
+        }
+      ],
+      "metadata": {
+        "persona": "Software Developer / Student",
+        "goal": "Understand architectural patterns through learning",
+        "success-criteria": "Developer understands trade-offs of different patterns",
+        "touchpoints": [
+          "Homepage",
+          "Architecture detail pages",
+          "Comparison view",
+          "Interactive task manager",
+          "API documentation"
+        ]
+      }
+    },
+    {
+      "unique-id": "task-creation-flow",
+      "name": "Task Creation Flow",
+      "description": "User creates a new task through the UI, which is validated and persisted to the monolith database, with response returned to the UI and cache invalidated.",
+      "transitions": [
+        {
+          "relationship-unique-id": "browser-to-task-manager-ui",
+          "sequence-number": 1,
+          "description": "User submits task creation form through browser UI",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "task-manager-ui-to-monolith-api",
+          "sequence-number": 2,
+          "description": "UI sends POST /tasks request with task data (sanitized)",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "monolith-api-uses-shared-domain",
+          "sequence-number": 3,
+          "description": "API validates and creates Task object using shared domain model",
+          "direction": "destination-to-source"
+        },
+        {
+          "relationship-unique-id": "monolith-api-to-database",
+          "sequence-number": 4,
+          "description": "API inserts task into database and invalidates cache",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "task-manager-ui-to-monolith-api",
+          "sequence-number": 5,
+          "description": "API returns created task with HTTP 201 response",
+          "direction": "destination-to-source"
+        },
+        {
+          "relationship-unique-id": "browser-to-task-manager-ui",
+          "sequence-number": 6,
+          "description": "UI updates DOM to display newly created task",
+          "direction": "destination-to-source"
+        }
+      ],
+      "metadata": {
+        "business-flow": "Task Management",
+        "operation-type": "CREATE",
+        "security-checks": [
+          "Input sanitization (bleach library)",
+          "Rate limiting check (20/min)",
+          "Parameter validation (Pydantic)"
+        ],
+        "reliability": "Automatic rollback on database error"
+      }
+    },
+    {
+      "unique-id": "task-retrieval-flow",
+      "name": "Task List Retrieval Flow (with Caching)",
+      "description": "User requests task list from UI. API checks in-memory cache (60s TTL); if cache miss, queries database and caches result. List returned to UI for display.",
+      "transitions": [
+        {
+          "relationship-unique-id": "browser-to-task-manager-ui",
+          "sequence-number": 1,
+          "description": "User loads task manager or refreshes task list",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "task-manager-ui-to-monolith-api",
+          "sequence-number": 2,
+          "description": "UI sends GET /tasks request",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "monolith-api-to-database",
+          "sequence-number": 3,
+          "description": "API checks in-memory cache; if miss, queries database for tasks",
+          "direction": "source-to-destination"
+        },
+        {
+          "relationship-unique-id": "monolith-api-to-database",
+          "sequence-number": 4,
+          "description": "If cache miss, cache is populated with 60-second TTL",
+          "direction": "destination-to-source"
+        },
+        {
+          "relationship-unique-id": "task-manager-ui-to-monolith-api",
+          "sequence-number": 5,
+          "description": "API returns cached or fresh task list as JSON",
+          "direction": "destination-to-source"
+        },
+        {
+          "relationship-unique-id": "browser-to-task-manager-ui",
+          "sequence-number": 6,
+          "description": "UI renders task list with filtering and statistics",
+          "direction": "destination-to-source"
+        }
+      ],
+      "metadata": {
+        "performance-optimization": "In-memory caching with 60s TTL",
+        "cache-hit-scenario": "Subsequent requests within 60s return instantly",
+        "cache-miss-scenario": "Cold start or after 60s requires database query",
+        "rate-limit": "100/minute for read operations"
+      }
+    }
+  ]
+}
