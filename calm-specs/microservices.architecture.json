@@ -1,0 +1,67 @@
+{
+  "$schema": "https://calm.finos.org/release/1.0/meta/calm.json",
+  "unique-id": "microservices-architecture",
+  "name": "Microservices Architecture - Task Manager",
+  "description": "Microservices implementation with independent services, API gateway, and database-per-service pattern",
+  "metadata": [{
+    "version": "1.0.0",
+    "pattern": "Microservices",
+    "deployment": "Multiple independent services",
+    "services": ["API Gateway (8006)", "Task Service (8003)"],
+    "characteristics": {
+      "deployment_complexity": "High - multiple units",
+      "modularity": "Highest - independent services",
+      "scaling": "Independent per service",
+      "fault_isolation": "High",
+      "data_consistency": "Eventual"
+    }
+  }],
+  "nodes": [
+    {
+      "unique-id": "api-gateway",
+      "node-type": "service",
+      "name": "API Gateway",
+      "description": "Single entry point routing requests to microservices",
+      "metadata": {"port": 8006, "framework": "FastAPI"},
+      "interfaces": [{"unique-id": "gateway-http", "port": 8006, "protocol": "HTTP"}]
+    },
+    {
+      "unique-id": "task-service",
+      "node-type": "service",
+      "name": "Task Service",
+      "description": "Independent microservice for task management",
+      "metadata": {"port": 8003, "database": "task_service.db"},
+      "interfaces": [{"unique-id": "task-http", "port": 8003, "protocol": "HTTP"}]
+    },
+    {
+      "unique-id": "task-database",
+      "node-type": "datastore",
+      "name": "Task Database",
+      "description": "SQLite database owned by task service"
+    }
+  ],
+  "relationships": [
+    {
+      "unique-id": "gateway-to-task-service",
+      "relationship-type": {
+        "interacts": {
+          "source-node": "api-gateway",
+          "destination-node": "task-service"
+        }
+      },
+      "protocol": "HTTP",
+      "description": "Gateway routes requests to task service"
+    },
+    {
+      "unique-id": "task-service-to-db",
+      "relationship-type": {
+        "interacts": {
+          "source-node": "task-service",
+          "destination-node": "task-database"
+        }
+      },
+      "protocol": "SQLite",
+      "description": "Task service owns its database"
+    }
+  ]
+}

@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  # Task Service
+  task-service:
+    build:
+      context: ./task-service
+      dockerfile: Dockerfile
+    container_name: task-service
+    ports:
+      - "8003:8003"
+    environment:
+      - PORT=8003
+    volumes:
+      - ./task-service:/app
+    networks:
+      - microservices-network
+
+  # User Service (Placeholder)
+  # user-service:
+  #   build:
+  #     context: ./user-service
+  #   ports:
+  #     - "8004:8004"
+  #   networks:
+  #     - microservices-network
+
+  # Project Service (Placeholder)
+  # project-service:
+  #   build:
+  #     context: ./project-service
+  #   ports:
+  #     - "8005:8005"
+  #   networks:
+  #     - microservices-network
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    ports:
+      - "8006:8006"
+    environment:
+      - PORT=8006
+      - TASK_SERVICE_URL=http://task-service:8003
+      - USER_SERVICE_URL=http://user-service:8004
+      - PROJECT_SERVICE_URL=http://project-service:8005
+    depends_on:
+      - task-service
+    volumes:
+      - ./api-gateway:/app
+    networks:
+      - microservices-network
+
+networks:
+  microservices-network:
+    driver: bridge

@@ -1,0 +1,17 @@
+{
+  "$schema": "https://calm.finos.org/release/1.0/meta/calm.json",
+  "unique-id": "layered-architecture",
+  "name": "Layered Architecture - Task Manager",
+  "description": "Traditional layered architecture with presentation, business, and data layers",
+  "metadata": [{
+    "version": "1.0.0",
+    "pattern": "Layered",
+    "port": 8005,
+    "layers": ["Presentation", "Business", "Data"]
+  }],
+  "nodes": [
+    {"unique-id": "presentation-layer", "node-type": "system", "name": "Presentation Layer"},
+    {"unique-id": "business-layer", "node-type": "system", "name": "Business Layer"},
+    {"unique-id": "data-layer", "node-type": "system", "name": "Data Layer"}
+  ]
+}
