@@ -1,0 +1,41 @@
+{
+  "$schema": "https://calm.finos.org/release/1.0/meta/calm.json",
+  "unique-id": "service-based-architecture",
+  "name": "Service-Based Architecture - Task Manager",
+  "description": "Coarse-grained services sharing a database",
+  "metadata": [{
+    "version": "1.0.0",
+    "pattern": "Service-Based",
+    "port": 8007,
+    "characteristics": {
+      "service_granularity": "Coarse-grained",
+      "database": "Shared across services"
+    }
+  }],
+  "nodes": [
+    {
+      "unique-id": "task-service",
+      "node-type": "service",
+      "name": "Task Service",
+      "description": "Coarse-grained service handling all task-related operations"
+    },
+    {
+      "unique-id": "shared-db",
+      "node-type": "datastore",
+      "name": "Shared Database",
+      "description": "SQLite database shared across all services"
+    }
+  ],
+  "relationships": [
+    {
+      "unique-id": "service-to-db",
+      "relationship-type": {
+        "interacts": {
+          "actor": "task-service",
+          "nodes": ["shared-db"]
+        }
+      },
+      "description": "Task service accesses shared database"
+    }
+  ]
+}

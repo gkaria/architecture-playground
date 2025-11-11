@@ -1,0 +1,54 @@
+{
+  "$schema": "https://calm.finos.org/release/1.0/meta/calm.json",
+  "unique-id": "layered-architecture",
+  "name": "Layered Architecture - Task Manager",
+  "description": "Traditional layered architecture with presentation, business, and data layers",
+  "metadata": [{
+    "version": "1.0.0",
+    "pattern": "Layered",
+    "port": 8005,
+    "layers": ["Presentation", "Business", "Data"]
+  }],
+  "nodes": [
+    {
+      "unique-id": "presentation-layer",
+      "node-type": "system",
+      "name": "Presentation Layer",
+      "description": "HTTP/API handling layer - manages requests and responses"
+    },
+    {
+      "unique-id": "business-layer",
+      "node-type": "system",
+      "name": "Business Layer",
+      "description": "Business logic and validation layer"
+    },
+    {
+      "unique-id": "data-layer",
+      "node-type": "system",
+      "name": "Data Layer",
+      "description": "Database access layer - handles persistence"
+    }
+  ],
+  "relationships": [
+    {
+      "unique-id": "presentation-to-business",
+      "relationship-type": {
+        "interacts": {
+          "actor": "presentation-layer",
+          "nodes": ["business-layer"]
+        }
+      },
+      "description": "Presentation layer calls business layer"
+    },
+    {
+      "unique-id": "business-to-data",
+      "relationship-type": {
+        "interacts": {
+          "actor": "business-layer",
+          "nodes": ["data-layer"]
+        }
+      },
+      "description": "Business layer calls data layer"
+    }
+  ]
+}

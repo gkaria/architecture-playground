@@ -1,8 +1,20 @@
 # Render.com Blueprint for Architecture Patterns Playground
 # This file defines all services for one-click deployment
+#
+# NOTE: Free tier services spin down after 15 minutes of inactivity
+# For production, consider upgrading critical services to paid tier
+#
+# DEPLOYMENT OPTIONS:
+# Option 1 (Recommended): Deploy all services for complete educational experience
+# Option 2 (Minimal): Deploy only services 1-3 for basic functionality
+# Option 3 (Custom): Comment out services you don't need
 
 services:
-  # 1. Learning Platform (Main Website)
+  # ============================================================================
+  # CORE SERVICES (Required for basic functionality)
+  # ============================================================================
+
+  # 1. Learning Platform (Main Website) - Port 8000
   - type: web
     name: architecture-playground
     runtime: python
@@ -19,24 +31,7 @@ services:
     healthCheckPath: /
     autoDeploy: true
 
-  # 2. Monolith API (Task Manager Backend)
-  - type: web
-    name: architecture-playground-api
-    runtime: python
-    plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: cd sample-app/01-monolith && uvicorn app:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
-      - key: CORS_ORIGINS
-        value: https://architecture-playground-ui.onrender.com,https://architecture-playground.onrender.com
-      - key: DATABASE_URL
-        sync: false  # Will use SQLite for now, can upgrade to PostgreSQL later
-    healthCheckPath: /
-    autoDeploy: true
-
-  # 3. Task Manager UI (Interactive Frontend)
+  # 2. Task Manager UI (Interactive Frontend) - Port 9000
   - type: web
     name: architecture-playground-ui
     runtime: python
@@ -48,6 +43,137 @@ services:
         value: 3.11.0
     healthCheckPath: /
     autoDeploy: true
+
+  # ============================================================================
+  # ARCHITECTURE PATTERN SERVICES (All 6 implementations)
+  # ============================================================================
+
+  # 3. Pattern 1: Monolithic Architecture - Port 8001
+  - type: web
+    name: arch-monolith
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd sample-app/01-monolith && uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: CORS_ORIGINS
+        value: https://architecture-playground-ui.onrender.com,https://architecture-playground.onrender.com
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # 4. Pattern 2: Modular Monolith - Port 8002
+  - type: web
+    name: arch-modular-monolith
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd sample-app/02-modular-monolith && uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: CORS_ORIGINS
+        value: https://architecture-playground-ui.onrender.com,https://architecture-playground.onrender.com
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # 5. Pattern 3a: Microservices - Task Service - Port 8003
+  - type: web
+    name: arch-microservices-task-service
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd sample-app/03-microservices/task-service && uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # 6. Pattern 3b: Microservices - API Gateway - Port 8006
+  - type: web
+    name: arch-microservices-gateway
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd sample-app/03-microservices/api-gateway && uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: TASK_SERVICE_URL
+        value: https://arch-microservices-task-service.onrender.com
+      - key: CORS_ORIGINS
+        value: https://architecture-playground-ui.onrender.com,https://architecture-playground.onrender.com
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # 7. Pattern 4: Event-Driven Architecture - Port 8004
+  - type: web
+    name: arch-event-driven
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd sample-app/04-event-driven && uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: CORS_ORIGINS
+        value: https://architecture-playground-ui.onrender.com,https://architecture-playground.onrender.com
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # 8. Pattern 5: Layered Architecture - Port 8005
+  - type: web
+    name: arch-layered
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd sample-app/05-layered && uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: CORS_ORIGINS
+        value: https://architecture-playground-ui.onrender.com,https://architecture-playground.onrender.com
+    healthCheckPath: /health
+    autoDeploy: true
+
+  # 9. Pattern 6: Service-Based Architecture - Port 8007
+  - type: web
+    name: arch-service-based
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: cd sample-app/06-service-based && uvicorn app:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: CORS_ORIGINS
+        value: https://architecture-playground-ui.onrender.com,https://architecture-playground.onrender.com
+    healthCheckPath: /health
+    autoDeploy: true
+
+# ============================================================================
+# NOTES
+# ============================================================================
+# Total Services: 9 web services
+# Free tier limitations:
+#   - Services spin down after 15 minutes of inactivity
+#   - 750 free hours per month across all services
+#   - First request after spin-down takes ~30 seconds to wake up
+#
+# Cost considerations:
+#   - All free tier: $0/month (with spin-down delays)
+#   - Upgrade critical services to Starter ($7/month each) to prevent spin-down
+#   - Recommended paid services: Learning Platform, Task Manager UI
+#
+# Architecture Pattern URLs (after deployment):
+#   - Monolith: https://arch-monolith.onrender.com
+#   - Modular Monolith: https://arch-modular-monolith.onrender.com
+#   - Microservices: https://arch-microservices-gateway.onrender.com
+#   - Event-Driven: https://arch-event-driven.onrender.com
+#   - Layered: https://arch-layered.onrender.com
+#   - Service-Based: https://arch-service-based.onrender.com
 
 # Database (optional, for future PostgreSQL upgrade)
 # databases:

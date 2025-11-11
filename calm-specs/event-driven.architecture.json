@@ -1,0 +1,42 @@
+{
+  "$schema": "https://calm.finos.org/release/1.0/meta/calm.json",
+  "unique-id": "event-driven-architecture",
+  "name": "Event-Driven Architecture - Task Manager",
+  "description": "Event-driven implementation with async communication via event bus",
+  "metadata": [{
+    "version": "1.0.0",
+    "pattern": "Event-Driven",
+    "port": 8004,
+    "characteristics": {
+      "communication": "Asynchronous via events",
+      "coupling": "Loose - event-based",
+      "scalability": "High - async processing"
+    }
+  }],
+  "nodes": [
+    {
+      "unique-id": "event-driven-api",
+      "node-type": "service",
+      "name": "Event-Driven API",
+      "description": "Task Manager API with event-driven architecture using in-memory event bus"
+    },
+    {
+      "unique-id": "event-bus",
+      "node-type": "system",
+      "name": "Event Bus",
+      "description": "In-memory event bus for async pub/sub communication"
+    }
+  ],
+  "relationships": [
+    {
+      "unique-id": "api-uses-event-bus",
+      "relationship-type": {
+        "interacts": {
+          "actor": "event-driven-api",
+          "nodes": ["event-bus"]
+        }
+      },
+      "description": "API publishes and subscribes to events via event bus"
+    }
+  ]
+}

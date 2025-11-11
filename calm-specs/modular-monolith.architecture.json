@@ -1,0 +1,80 @@
+{
+  "$schema": "https://calm.finos.org/release/1.0/meta/calm.json",
+  "unique-id": "modular-monolith-architecture",
+  "name": "Modular Monolith Architecture - Task Manager",
+  "description": "A modular monolith implementation where the application is deployed as a single unit but organized into well-defined modules with clear boundaries. Each module has its own repository, service, and API layers.",
+  "metadata": [{
+    "version": "1.0.0",
+    "pattern": "Modular Monolith",
+    "port": 8002,
+    "deployment": "Single deployment unit",
+    "characteristics": {
+      "deployment_complexity": "Low - single unit",
+      "modularity": "High - clear module boundaries",
+      "coupling": "Low - modules communicate through interfaces",
+      "testability": "High - modules tested independently",
+      "team_scalability": "Medium - teams can own modules",
+      "refactoring_path": "Easy migration to microservices"
+    }
+  }],
+  "nodes": [
+    {
+      "unique-id": "modular-monolith-api",
+      "node-type": "service",
+      "name": "Modular Monolith API",
+      "description": "Single deployment unit containing multiple modules with clear boundaries",
+      "metadata": {
+        "port": 8002,
+        "framework": "FastAPI",
+        "modules": ["tasks", "users", "projects"]
+      }
+    },
+    {
+      "unique-id": "tasks-module",
+      "node-type": "system",
+      "name": "Tasks Module",
+      "description": "Self-contained module for task management with repository, service, and router layers",
+      "metadata": {
+        "layers": ["repository", "service", "router"],
+        "responsibilities": ["Task CRUD operations", "Business validation", "Task caching"]
+      }
+    },
+    {
+      "unique-id": "infrastructure-layer",
+      "node-type": "system",
+      "name": "Infrastructure Layer",
+      "description": "Shared infrastructure components including database connection and security utilities",
+      "metadata": {
+        "components": ["DatabaseConnection", "Security utilities"]
+      }
+    },
+    {
+      "unique-id": "shared-database",
+      "node-type": "datastore",
+      "name": "SQLite Database",
+      "description": "Single shared database containing tables for all modules"
+    }
+  ],
+  "relationships": [
+    {
+      "unique-id": "tasks-module-uses-infrastructure",
+      "relationship-type": {
+        "interacts": {
+          "actor": "tasks-module",
+          "nodes": ["infrastructure-layer"]
+        }
+      },
+      "description": "Tasks module uses infrastructure for database and security"
+    },
+    {
+      "unique-id": "infrastructure-to-database",
+      "relationship-type": {
+        "interacts": {
+          "actor": "infrastructure-layer",
+          "nodes": ["shared-database"]
+        }
+      },
+      "description": "Infrastructure manages database connections"
+    }
+  ]
+}
