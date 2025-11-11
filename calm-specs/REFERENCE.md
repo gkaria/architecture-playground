@@ -205,7 +205,6 @@ This CALM spec can be used for:
 
 - [FINOS CALM Official Docs](https://calm.finos.org)
 - [CALM v1.0 Schema](https://calm.finos.org/release/1.0/meta/calm.json)
-- [Calm CLI](https://github.com/finos/calm/wiki/CLI)
 
 ---
 
