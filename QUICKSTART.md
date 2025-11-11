@@ -1,36 +1,38 @@
 # Quick Start Guide
 
-## Phase 1 Complete! 🎉
+## All 6 Patterns Complete! 🎉
 
-You now have a fully working Architecture Patterns Playground with:
+You now have a **fully working** Architecture Patterns Playground with all 6 architecture patterns implemented:
 
 ### ✅ What's Built
 
-1. **Interactive Task Manager UI** (task-manager-ui/) 🎯 NEW!
+1. **Interactive Task Manager UI** (task-manager-ui/)
    - Common frontend for all architectures
    - Architecture selector dropdown
    - Real-time performance metrics
    - Full CRUD operations with live updates
    - Filter, search, and statistics
 
-2. **Monolith Task Manager API** (sample-app/01-monolith/)
-   - FastAPI REST API with 6 endpoints
-   - SQLite database
-   - In-memory caching
-   - CORS-enabled for UI integration
-   - Full test suite (all passing)
+2. **All 6 Architecture Pattern Implementations**:
+   - ✅ **Monolith** (Port 8001) - Single deployment unit
+   - ✅ **Modular Monolith** (Port 8002) - Module boundaries
+   - ✅ **Microservices** (Port 8006, 8003) - Independent services
+   - ✅ **Event-Driven** (Port 8004) - Async event bus
+   - ✅ **Layered** (Port 8005) - Traditional 3-tier
+   - ✅ **Service-Based** (Port 8007) - Coarse-grained services
 
 3. **Learning Platform** (platform/)
    - Beautiful responsive homepage
    - Interactive demo link
-   - Architecture detail pages
+   - Architecture detail pages for all 6 patterns
    - Comparison view
    - Tailwind CSS styling
 
-4. **Documentation**
-   - CALM specification (JSON)
-   - ADR-001 (Architecture Decision Record)
-   - Comprehensive READMEs
+4. **Comprehensive Documentation**
+   - 6 CALM specifications (JSON format)
+   - 6 ADRs (Architecture Decision Records)
+   - Pattern-specific READMEs
+   - Implementation summary
 
 ---
 
@@ -51,14 +53,31 @@ python app.py
 
 Visit: **http://localhost:8000**
 
-### 3. Run the Monolith API
+### 3. Run Any Architecture Pattern
+
+Run any of the 6 implementations:
 
 ```bash
-cd sample-app/01-monolith
-python app.py
+# Monolith (Port 8001)
+cd sample-app/01-monolith && python app.py
+
+# Modular Monolith (Port 8002)
+cd sample-app/02-modular-monolith && python app.py
+
+# Microservices (Port 8006 gateway)
+cd sample-app/03-microservices && docker-compose up
+
+# Event-Driven (Port 8004)
+cd sample-app/04-event-driven && python app.py
+
+# Layered (Port 8005)
+cd sample-app/05-layered && python app.py
+
+# Service-Based (Port 8007)
+cd sample-app/06-service-based && python app.py
 ```
 
-Visit: **http://localhost:8001/docs** for API documentation
+**API Documentation**: Each pattern exposes Swagger docs at `/docs`
 
 ### 4. Run the Interactive Task Manager UI 🎯 NEW!
 

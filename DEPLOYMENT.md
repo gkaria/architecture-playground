@@ -6,13 +6,30 @@ Complete guide to deploy Architecture Patterns Playground to Render.com
 
 ## 🚀 One-Click Deployment
 
-The project is configured for **Blueprint deployment** on Render.com, which means all 3 services can be deployed with just a few clicks.
+The project is configured for **Blueprint deployment** on Render.com, which means all **9 services** can be deployed with just a few clicks.
 
 ### Services That Will Be Deployed
 
+**Core Services:**
 1. **Learning Platform** - `architecture-playground.onrender.com`
-2. **Monolith API** - `architecture-playground-api.onrender.com`
-3. **Task Manager UI** - `architecture-playground-ui.onrender.com`
+2. **Task Manager UI** - `architecture-playground-ui.onrender.com`
+
+**Architecture Pattern Services (All 6 implementations):**
+3. **Monolithic** - `arch-monolith.onrender.com`
+4. **Modular Monolith** - `arch-modular-monolith.onrender.com`
+5. **Microservices Gateway** - `arch-microservices-gateway.onrender.com`
+6. **Microservices Task Service** - `arch-microservices-task-service.onrender.com`
+7. **Event-Driven** - `arch-event-driven.onrender.com`
+8. **Layered** - `arch-layered.onrender.com`
+9. **Service-Based** - `arch-service-based.onrender.com`
+
+### Free Tier Considerations
+
+- **Total Services**: 9 web services
+- **Free Hours**: 750 hours/month across all services
+- **Spin-Down**: Services sleep after 15 minutes of inactivity
+- **Wake-Up Time**: ~30 seconds for first request after sleep
+- **Cost**: $0/month (free tier) or upgrade critical services to $7/month each
 
 ---
 
@@ -30,10 +47,28 @@ git push origin main  # or your main branch name
 
 ### ✅ Step 2: Verify `render.yaml` Exists
 
-The `render.yaml` file in the root directory contains all deployment configuration. It should define 3 services:
-- Learning Platform (web service)
-- Monolith API (web service)
-- Task Manager UI (static site)
+The `render.yaml` file in the root directory contains all deployment configuration. It defines 9 services:
+- **Core**: Learning Platform, Task Manager UI
+- **Architectures**: All 6 pattern implementations (Monolith, Modular Monolith, Microservices x2, Event-Driven, Layered, Service-Based)
+
+### ✅ Step 3: Choose Deployment Option
+
+You have three deployment options:
+
+**Option 1 (Recommended): Deploy All Services**
+- Complete educational experience with all 6 architecture patterns
+- Uses ~9 services on free tier (may experience spin-down)
+- Best for: Portfolio showcase, comprehensive learning
+
+**Option 2 (Minimal): Deploy Core + 2-3 Patterns**
+- Comment out unwanted services in `render.yaml`
+- Lower resource usage, faster wake-up times
+- Best for: Testing, focused learning on specific patterns
+
+**Option 3 (Production): Upgrade Critical Services**
+- Deploy all on free tier, upgrade 2-3 critical services to paid ($7/mo each)
+- Recommended paid services: Learning Platform, Task Manager UI
+- Best for: Live demos, always-available portfolio
 
 ---
 
@@ -55,20 +90,27 @@ The `render.yaml` file in the root directory contains all deployment configurati
 
 3. **Review Services**
    - Render will detect `render.yaml` automatically
-   - Review the 3 services that will be created:
+   - Review the 9 services that will be created:
      - `architecture-playground` (Learning Platform)
-     - `architecture-playground-api` (Monolith API)
      - `architecture-playground-ui` (Task Manager UI)
+     - `arch-monolith` (Monolithic Architecture)
+     - `arch-modular-monolith` (Modular Monolith)
+     - `arch-microservices-gateway` (Microservices Gateway)
+     - `arch-microservices-task-service` (Microservices Task Service)
+     - `arch-event-driven` (Event-Driven Architecture)
+     - `arch-layered` (Layered Architecture)
+     - `arch-service-based` (Service-Based Architecture)
 
 4. **Deploy**
    - Click **"Apply"**
-   - Render will start building and deploying all 3 services
-   - This takes 5-10 minutes for first deployment
+   - Render will start building and deploying all 9 services
+   - This takes 15-20 minutes for first deployment (9 services building in parallel)
 
 5. **Monitor Deployment**
    - Watch the build logs for each service
    - First deployment always takes longer
    - All services should show "Live" status when complete
+   - Note: Services may take 30-60 seconds to respond initially
 
 ---
 

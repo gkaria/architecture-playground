@@ -39,35 +39,49 @@ Help developers understand:
 
 ## Architecture Patterns (6 Implementations)
 
-### ✅ Phase 1 - Implemented
+### ✅ All Patterns Fully Implemented!
 
 1. **Monolithic Architecture** (`sample-app/01-monolith/`)
    - Single deployment unit with shared database
    - Simple, fast to develop, easy to deploy
-   - **Status**: ✅ LIVE
+   - **Status**: ✅ COMPLETE
    - **Port**: 8001
-
-### 🚧 Coming Soon
+   - **Documentation**: ADR-001, CALM spec
 
 2. **Modular Monolith** (`sample-app/02-modular-monolith/`)
    - Clear module boundaries within a single deployment
-   - Better organization while maintaining monolith benefits
+   - Module-based organization with Repository→Service→Router layers
+   - **Status**: ✅ COMPLETE
+   - **Port**: 8002
+   - **Documentation**: ADR-002, CALM spec, comprehensive README
 
 3. **Microservices Architecture** (`sample-app/03-microservices/`)
    - Independent services with separate databases
-   - Maximum scalability and team autonomy
+   - API Gateway pattern with Docker Compose orchestration
+   - **Status**: ✅ COMPLETE
+   - **Ports**: 8006 (gateway), 8003 (task service)
+   - **Documentation**: ADR-003, CALM spec, comprehensive README
 
 4. **Event-Driven Architecture** (`sample-app/04-event-driven/`)
-   - Asynchronous communication through events
-   - High scalability and loose coupling
+   - Asynchronous communication through event bus
+   - Loose coupling via pub/sub pattern
+   - **Status**: ✅ COMPLETE
+   - **Port**: 8004
+   - **Documentation**: ADR-004, CALM spec
 
 5. **Layered Architecture** (`sample-app/05-layered/`)
    - Traditional horizontal layers (presentation, business, data)
-   - Well-understood enterprise pattern
+   - Clear separation of concerns across tiers
+   - **Status**: ✅ COMPLETE
+   - **Port**: 8005
+   - **Documentation**: ADR-005, CALM spec
 
 6. **Service-Based Architecture** (`sample-app/06-service-based/`)
    - Coarse-grained services with shared database
    - Practical middle ground between monolith and microservices
+   - **Status**: ✅ COMPLETE
+   - **Port**: 8007
+   - **Documentation**: ADR-006, CALM spec
 
 ---
 
@@ -101,20 +115,45 @@ architecture-playground/
 │   │   ├── database.py        # SQLite database layer
 │   │   └── README.md          # Pattern explanation
 │   │
-│   ├── 02-modular-monolith/   # Coming soon...
-│   ├── 03-microservices/      # Coming soon...
-│   ├── 04-event-driven/       # Coming soon...
-│   ├── 05-layered/            # Coming soon...
-│   └── 06-service-based/      # Coming soon...
+│   ├── 02-modular-monolith/   # ✅ Modular Monolith
+│   │   ├── app.py
+│   │   ├── infrastructure/    # Shared components
+│   │   └── modules/           # Tasks, users, projects modules
+│   │
+│   ├── 03-microservices/      # ✅ Microservices
+│   │   ├── api-gateway/       # Gateway (port 8006)
+│   │   ├── task-service/      # Task service (port 8003)
+│   │   └── docker-compose.yml
+│   │
+│   ├── 04-event-driven/       # ✅ Event-Driven
+│   │   └── app.py             # Event bus + handlers
+│   │
+│   ├── 05-layered/            # ✅ Layered Architecture
+│   │   ├── presentation/      # API layer
+│   │   ├── business/          # Business logic
+│   │   └── data/              # Data access
+│   │
+│   └── 06-service-based/      # ✅ Service-Based
+│       ├── app.py
+│       ├── shared/            # Shared database
+│       └── task-service/      # Coarse-grained service
 │
 ├── calm-specs/                # CALM documentation (JSON)
-│   ├── monolith/
-│   │   └── architecture.json  # CALM spec for monolith
-│   └── comparisons/
+│   ├── system.architecture.json         # Overall system
+│   ├── modular-monolith.architecture.json
+│   ├── microservices.architecture.json
+│   ├── event-driven.architecture.json
+│   ├── layered.architecture.json
+│   └── service-based.architecture.json
 │
 ├── docs/
 │   ├── ADRs/                  # Architecture Decision Records
-│   │   └── ADR-001-monolithic-architecture.md
+│   │   ├── ADR-001-monolithic-architecture.md
+│   │   ├── ADR-002-modular-monolith-architecture.md
+│   │   ├── ADR-003-microservices-architecture.md
+│   │   ├── ADR-004-event-driven-architecture.md
+│   │   ├── ADR-005-layered-architecture.md
+│   │   └── ADR-006-service-based-architecture.md
 │   └── learning-notes/
 │
 └── README.md                  # This file
@@ -169,6 +208,40 @@ Visit http://localhost:9000 to use the Task Manager UI.
 - Switch between different backend architectures
 - See real-time performance metrics
 - Filter tasks by status
+
+### 5. Run All Architecture Patterns
+
+Each pattern can be run independently:
+
+```bash
+# Monolithic (Port 8001)
+cd sample-app/01-monolith && python app.py
+
+# Modular Monolith (Port 8002)
+cd sample-app/02-modular-monolith && python app.py
+
+# Microservices (Port 8006 gateway, 8003 task service)
+cd sample-app/03-microservices && docker-compose up
+# OR run manually: cd task-service && python app.py (8003)
+#                  cd api-gateway && python app.py (8006)
+
+# Event-Driven (Port 8004)
+cd sample-app/04-event-driven && python app.py
+
+# Layered (Port 8005)
+cd sample-app/05-layered && python app.py
+
+# Service-Based (Port 8007)
+cd sample-app/06-service-based && python app.py
+```
+
+**API Documentation**: Each implementation exposes Swagger docs at `/docs`
+- Monolith: http://localhost:8001/docs
+- Modular Monolith: http://localhost:8002/docs
+- Microservices Gateway: http://localhost:8006/docs
+- Event-Driven: http://localhost:8004/docs
+- Layered: http://localhost:8005/docs
+- Service-Based: http://localhost:8007/docs
 
 ---
 
