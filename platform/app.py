@@ -248,10 +248,24 @@ async def comparison(request: Request):
 @app.get("/calm/{arch_id}")
 async def get_calm_spec(arch_id: str):
     """Get CALM specification for an architecture."""
-    calm_spec_path = Path(__file__).parent.parent / "calm-specs" / arch_id / "architecture.json"
+    # Map architecture IDs to their CALM spec files
+    # Currently only monolith has a CALM spec (system.architecture.json)
+    calm_spec_mapping = {
+        "monolith": "system.architecture.json",
+        # Future mappings:
+        # "modular-monolith": "modular-monolith.architecture.json",
+        # "microservices": "microservices.architecture.json",
+        # etc.
+    }
+
+    spec_filename = calm_spec_mapping.get(arch_id)
+    if not spec_filename:
+        return {"error": f"CALM specification not available for architecture '{arch_id}'"}
+
+    calm_spec_path = Path(__file__).parent.parent / "calm-specs" / spec_filename
 
     if not calm_spec_path.exists():
-        return {"error": "CALM specification not found"}
+        return {"error": "CALM specification file not found"}
 
     import json
     with open(calm_spec_path) as f:
