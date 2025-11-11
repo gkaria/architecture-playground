@@ -68,7 +68,7 @@ ARCHITECTURES = [
         "name": "Modular Monolith",
         "description": "Single deployment with clear module boundaries and interfaces",
         "complexity": "Medium",
-        "status": "coming_soon",
+        "status": "implemented",
         "when_to_use": [
             "Growing application needs better organization",
             "Want monolith benefits with better structure",
@@ -93,7 +93,7 @@ ARCHITECTURES = [
         "name": "Microservices Architecture",
         "description": "Independent services with separate databases and deployment",
         "complexity": "High",
-        "status": "coming_soon",
+        "status": "implemented",
         "when_to_use": [
             "Large, complex applications",
             "Need independent scaling",
@@ -120,7 +120,7 @@ ARCHITECTURES = [
         "name": "Event-Driven Architecture",
         "description": "Asynchronous communication through events and message queues",
         "complexity": "High",
-        "status": "coming_soon",
+        "status": "implemented",
         "when_to_use": [
             "High scalability requirements",
             "Loose coupling is critical",
@@ -147,7 +147,7 @@ ARCHITECTURES = [
         "name": "Layered Architecture",
         "description": "Organized in horizontal layers (presentation, business, data)",
         "complexity": "Low",
-        "status": "coming_soon",
+        "status": "implemented",
         "when_to_use": [
             "Traditional enterprise applications",
             "Clear separation of concerns needed",
@@ -172,7 +172,7 @@ ARCHITECTURES = [
         "name": "Service-Based Architecture",
         "description": "Coarse-grained services with shared database",
         "complexity": "Medium",
-        "status": "coming_soon",
+        "status": "implemented",
         "when_to_use": [
             "Middle ground between monolith and microservices",
             "Domain-driven bounded contexts",
@@ -249,13 +249,13 @@ async def comparison(request: Request):
 async def get_calm_spec(arch_id: str):
     """Get CALM specification for an architecture."""
     # Map architecture IDs to their CALM spec files
-    # Currently only monolith has a CALM spec (system.architecture.json)
     calm_spec_mapping = {
         "monolith": "system.architecture.json",
-        # Future mappings:
-        # "modular-monolith": "modular-monolith.architecture.json",
-        # "microservices": "microservices.architecture.json",
-        # etc.
+        "modular-monolith": "modular-monolith.architecture.json",
+        "microservices": "microservices.architecture.json",
+        "event-driven": "event-driven.architecture.json",
+        "layered": "layered.architecture.json",
+        "service-based": "service-based.architecture.json"
     }
 
     spec_filename = calm_spec_mapping.get(arch_id)
