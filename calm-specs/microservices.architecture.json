@@ -23,7 +23,7 @@
       "name": "API Gateway",
       "description": "Single entry point routing requests to microservices",
       "metadata": {"port": 8006, "framework": "FastAPI"},
-      "interfaces": [{"unique-id": "gateway-http", "port": 8006, "protocol": "HTTP"}]
+      "interfaces": [{"unique-id": "gateway-http", "port": 8006, "protocol": "http"}]
     },
     {
       "unique-id": "task-service",
@@ -31,7 +31,7 @@
       "name": "Task Service",
       "description": "Independent microservice for task management",
       "metadata": {"port": 8003, "database": "task_service.db"},
-      "interfaces": [{"unique-id": "task-http", "port": 8003, "protocol": "HTTP"}]
+      "interfaces": [{"unique-id": "task-http", "port": 8003, "protocol": "http"}]
     },
     {
       "unique-id": "task-database",
@@ -45,22 +45,20 @@
       "unique-id": "gateway-to-task-service",
       "relationship-type": {
         "interacts": {
-          "source-node": "api-gateway",
-          "destination-node": "task-service"
+          "actor": "api-gateway",
+          "nodes": ["task-service"]
         }
       },
-      "protocol": "HTTP",
       "description": "Gateway routes requests to task service"
     },
     {
       "unique-id": "task-service-to-db",
       "relationship-type": {
         "interacts": {
-          "source-node": "task-service",
-          "destination-node": "task-database"
+          "actor": "task-service",
+          "nodes": ["task-database"]
         }
       },
-      "protocol": "SQLite",
       "description": "Task service owns its database"
     }
   ]

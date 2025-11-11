@@ -10,8 +10,45 @@
     "layers": ["Presentation", "Business", "Data"]
   }],
   "nodes": [
-    {"unique-id": "presentation-layer", "node-type": "system", "name": "Presentation Layer"},
-    {"unique-id": "business-layer", "node-type": "system", "name": "Business Layer"},
-    {"unique-id": "data-layer", "node-type": "system", "name": "Data Layer"}
+    {
+      "unique-id": "presentation-layer",
+      "node-type": "system",
+      "name": "Presentation Layer",
+      "description": "HTTP/API handling layer - manages requests and responses"
+    },
+    {
+      "unique-id": "business-layer",
+      "node-type": "system",
+      "name": "Business Layer",
+      "description": "Business logic and validation layer"
+    },
+    {
+      "unique-id": "data-layer",
+      "node-type": "system",
+      "name": "Data Layer",
+      "description": "Database access layer - handles persistence"
+    }
+  ],
+  "relationships": [
+    {
+      "unique-id": "presentation-to-business",
+      "relationship-type": {
+        "interacts": {
+          "actor": "presentation-layer",
+          "nodes": ["business-layer"]
+        }
+      },
+      "description": "Presentation layer calls business layer"
+    },
+    {
+      "unique-id": "business-to-data",
+      "relationship-type": {
+        "interacts": {
+          "actor": "business-layer",
+          "nodes": ["data-layer"]
+        }
+      },
+      "description": "Business layer calls data layer"
+    }
   ]
 }

@@ -2,416 +2,79 @@
   "$schema": "https://calm.finos.org/release/1.0/meta/calm.json",
   "unique-id": "modular-monolith-architecture",
   "name": "Modular Monolith Architecture - Task Manager",
-  "description": "A modular monolith implementation where the application is deployed as a single unit but organized into well-defined modules with clear boundaries. Each module (tasks, users, projects) has its own repository, service, and API layers.",
-  "metadata": [
-    {
-      "version": "1.0.0",
-      "created-by": "Gaurang Karia",
-      "created-date": "2025-11-11",
-      "pattern": "Modular Monolith",
-      "purpose": "Demonstrate module-based organization within a single deployment unit",
-      "domain": "Task Management",
-      "technologies": [
-        "Python/FastAPI",
-        "SQLite",
-        "Pydantic"
-      ],
-      "deployment": "Single deployment unit",
-      "port": 8002,
-      "characteristics": {
-        "deployment_complexity": "Low - single unit",
-        "modularity": "High - clear module boundaries",
-        "coupling": "Low - modules communicate through interfaces",
-        "testability": "High - modules tested independently",
-        "team_scalability": "Medium - teams can own modules",
-        "refactoring_path": "Easy migration to microservices"
-      }
+  "description": "A modular monolith implementation where the application is deployed as a single unit but organized into well-defined modules with clear boundaries. Each module has its own repository, service, and API layers.",
+  "metadata": [{
+    "version": "1.0.0",
+    "pattern": "Modular Monolith",
+    "port": 8002,
+    "deployment": "Single deployment unit",
+    "characteristics": {
+      "deployment_complexity": "Low - single unit",
+      "modularity": "High - clear module boundaries",
+      "coupling": "Low - modules communicate through interfaces",
+      "testability": "High - modules tested independently",
+      "team_scalability": "Medium - teams can own modules",
+      "refactoring_path": "Easy migration to microservices"
     }
-  ],
+  }],
   "nodes": [
     {
       "unique-id": "modular-monolith-api",
       "node-type": "service",
       "name": "Modular Monolith API",
-      "description": "Single deployment unit containing multiple modules with clear boundaries. Main application orchestrates modules and exposes unified API.",
+      "description": "Single deployment unit containing multiple modules with clear boundaries",
       "metadata": {
         "port": 8002,
         "framework": "FastAPI",
-        "pattern": "Modular Monolith",
-        "deployment": "Single process",
-        "modules": [
-          "tasks",
-          "users",
-          "projects"
-        ]
-      },
-      "interfaces": [
-        {
-          "unique-id": "modular-monolith-http",
-          "port": 8002,
-          "protocol": "HTTP",
-          "host": "localhost",
-          "path": "/"
-        }
-      ]
+        "modules": ["tasks", "users", "projects"]
+      }
     },
     {
       "unique-id": "tasks-module",
       "node-type": "system",
       "name": "Tasks Module",
-      "description": "Self-contained module for task management with repository, service, and router layers. Handles all task-related operations with clear boundaries.",
+      "description": "Self-contained module for task management with repository, service, and router layers",
       "metadata": {
-        "layers": {
-          "repository": "Data access layer - TaskRepository",
-          "service": "Business logic layer - TaskService with caching",
-          "router": "API routing layer - REST endpoints"
-        },
-        "responsibilities": [
-          "Task CRUD operations",
-          "Business validation",
-          "Task caching",
-          "Input sanitization"
-        ],
-        "dependencies": [
-          "infrastructure.database",
-          "infrastructure.security",
-          "shared.domain"
-        ]
-      },
-      "interfaces": [
-        {
-          "unique-id": "tasks-module-api",
-          "protocol": "Python Module",
-          "path": "/tasks"
-        }
-      ]
-    },
-    {
-      "unique-id": "users-module",
-      "node-type": "system",
-      "name": "Users Module",
-      "description": "User management module (placeholder for future implementation)",
-      "metadata": {
-        "status": "Planned",
-        "layers": {
-          "repository": "UserRepository",
-          "service": "UserService",
-          "router": "User REST endpoints"
-        }
-      }
-    },
-    {
-      "unique-id": "projects-module",
-      "node-type": "system",
-      "name": "Projects Module",
-      "description": "Project management module (placeholder for future implementation)",
-      "metadata": {
-        "status": "Planned",
-        "layers": {
-          "repository": "ProjectRepository",
-          "service": "ProjectService",
-          "router": "Project REST endpoints"
-        }
+        "layers": ["repository", "service", "router"],
+        "responsibilities": ["Task CRUD operations", "Business validation", "Task caching"]
       }
     },
     {
       "unique-id": "infrastructure-layer",
       "node-type": "system",
       "name": "Infrastructure Layer",
-      "description": "Shared infrastructure components used by all modules including database connection, security utilities, and base repository pattern.",
+      "description": "Shared infrastructure components including database connection and security utilities",
       "metadata": {
-        "components": {
-          "database": "DatabaseConnection - SQLite connection manager with base repository",
-          "security": "Rate limiting, CORS, input sanitization"
-        },
-        "shared_by": "All modules"
+        "components": ["DatabaseConnection", "Security utilities"]
       }
     },
     {
       "unique-id": "shared-database",
       "node-type": "datastore",
       "name": "SQLite Database",
-      "description": "Single shared database containing tables for all modules (tasks, users, projects)",
-      "metadata": {
-        "type": "SQLite",
-        "file": "modular_tasks.db",
-        "tables": [
-          "tasks",
-          "users",
-          "projects"
-        ],
-        "access_pattern": "Through repository layer only"
-      }
-    },
-    {
-      "unique-id": "task-manager-ui-client",
-      "node-type": "webclient",
-      "name": "Task Manager UI",
-      "description": "Frontend application that connects to the modular monolith API"
+      "description": "Single shared database containing tables for all modules"
     }
   ],
   "relationships": [
     {
-      "unique-id": "ui-to-api",
-      "relationship-type": {
-        "connects": {
-          "source": {
-            "node": "task-manager-ui-client",
-            "interface": "browser"
-          },
-          "destination": {
-            "node": "modular-monolith-api",
-            "interface": "modular-monolith-http"
-          }
-        }
-      },
-      "protocol": "HTTP/REST",
-      "description": "UI sends HTTP requests to modular monolith API"
-    },
-    {
-      "unique-id": "app-to-tasks-module",
-      "relationship-type": {
-        "contains": {
-          "container": "modular-monolith-api",
-          "nodes": [
-            "tasks-module"
-          ]
-        }
-      },
-      "description": "Main application contains tasks module"
-    },
-    {
-      "unique-id": "app-to-infrastructure",
-      "relationship-type": {
-        "contains": {
-          "container": "modular-monolith-api",
-          "nodes": [
-            "infrastructure-layer"
-          ]
-        }
-      },
-      "description": "Main application contains shared infrastructure"
-    },
-    {
       "unique-id": "tasks-module-uses-infrastructure",
       "relationship-type": {
         "interacts": {
-          "source-node": "tasks-module",
-          "destination-node": "infrastructure-layer"
+          "actor": "tasks-module",
+          "nodes": ["infrastructure-layer"]
         }
       },
-      "protocol": "Python Function Calls",
       "description": "Tasks module uses infrastructure for database and security"
-    },
-    {
-      "unique-id": "tasks-module-uses-database",
-      "relationship-type": {
-        "interacts": {
-          "source-node": "tasks-module",
-          "destination-node": "shared-database"
-        }
-      },
-      "protocol": "SQL",
-      "description": "Tasks module accesses database through repository layer"
     },
     {
       "unique-id": "infrastructure-to-database",
       "relationship-type": {
         "interacts": {
-          "source-node": "infrastructure-layer",
-          "destination-node": "shared-database"
+          "actor": "infrastructure-layer",
+          "nodes": ["shared-database"]
         }
       },
-      "protocol": "SQLite Connection",
       "description": "Infrastructure manages database connections"
-    }
-  ],
-  "flows": [
-    {
-      "unique-id": "create-task-flow",
-      "name": "Create Task Flow",
-      "description": "End-to-end flow showing how a task creation request flows through the modular architecture",
-      "steps": [
-        {
-          "step-id": "1",
-          "source": "task-manager-ui-client",
-          "destination": "modular-monolith-api",
-          "description": "User submits task creation form",
-          "protocol": "HTTP POST /tasks"
-        },
-        {
-          "step-id": "2",
-          "source": "modular-monolith-api",
-          "destination": "tasks-module",
-          "description": "API routes request to tasks module router",
-          "protocol": "Function call to task_router.create_task()"
-        },
-        {
-          "step-id": "3",
-          "source": "tasks-module",
-          "destination": "tasks-module",
-          "description": "Router validates input, calls service layer",
-          "protocol": "task_service.create_task(task_data)"
-        },
-        {
-          "step-id": "4",
-          "source": "tasks-module",
-          "destination": "infrastructure-layer",
-          "description": "Service sanitizes input using security utilities",
-          "protocol": "sanitize_string(), sanitize_tags()"
-        },
-        {
-          "step-id": "5",
-          "source": "tasks-module",
-          "destination": "tasks-module",
-          "description": "Service applies business validation, calls repository",
-          "protocol": "task_repository.create(task)"
-        },
-        {
-          "step-id": "6",
-          "source": "tasks-module",
-          "destination": "shared-database",
-          "description": "Repository executes SQL INSERT",
-          "protocol": "SQLite INSERT INTO tasks"
-        },
-        {
-          "step-id": "7",
-          "source": "shared-database",
-          "destination": "tasks-module",
-          "description": "Database returns created task with ID",
-          "protocol": "Task object"
-        },
-        {
-          "step-id": "8",
-          "source": "tasks-module",
-          "destination": "tasks-module",
-          "description": "Service invalidates cache",
-          "protocol": "self._invalidate_cache()"
-        },
-        {
-          "step-id": "9",
-          "source": "tasks-module",
-          "destination": "modular-monolith-api",
-          "description": "Router returns TaskResponse",
-          "protocol": "Pydantic model"
-        },
-        {
-          "step-id": "10",
-          "source": "modular-monolith-api",
-          "destination": "task-manager-ui-client",
-          "description": "API returns JSON response to UI",
-          "protocol": "HTTP 201 Created"
-        }
-      ]
-    },
-    {
-      "unique-id": "get-tasks-flow",
-      "name": "Get Tasks with Caching",
-      "description": "Flow showing caching behavior in the service layer",
-      "steps": [
-        {
-          "step-id": "1",
-          "source": "task-manager-ui-client",
-          "destination": "modular-monolith-api",
-          "description": "User requests task list",
-          "protocol": "HTTP GET /tasks"
-        },
-        {
-          "step-id": "2",
-          "source": "modular-monolith-api",
-          "destination": "tasks-module",
-          "description": "API routes to tasks module",
-          "protocol": "task_service.get_tasks()"
-        },
-        {
-          "step-id": "3",
-          "source": "tasks-module",
-          "destination": "tasks-module",
-          "description": "Service checks cache, returns if valid",
-          "protocol": "Cache lookup (60s TTL)"
-        },
-        {
-          "step-id": "4",
-          "source": "tasks-module",
-          "destination": "shared-database",
-          "description": "On cache miss, repository queries database",
-          "protocol": "SQLite SELECT"
-        },
-        {
-          "step-id": "5",
-          "source": "tasks-module",
-          "destination": "tasks-module",
-          "description": "Service updates cache",
-          "protocol": "Cache write"
-        },
-        {
-          "step-id": "6",
-          "source": "modular-monolith-api",
-          "destination": "task-manager-ui-client",
-          "description": "API returns task list",
-          "protocol": "HTTP 200 OK"
-        }
-      ]
-    }
-  ],
-  "controls": [
-    {
-      "unique-id": "rate-limiting",
-      "name": "Rate Limiting",
-      "description": "Prevents API abuse with rate limits per endpoint type",
-      "metadata": {
-        "limits": {
-          "read": "100 requests/minute",
-          "write": "30 requests/minute",
-          "create": "20 requests/minute"
-        },
-        "implementation": "SlowAPI middleware"
-      }
-    },
-    {
-      "unique-id": "input-sanitization",
-      "name": "Input Sanitization",
-      "description": "Prevents XSS attacks by sanitizing all user inputs",
-      "metadata": {
-        "tool": "bleach library",
-        "scope": "All text inputs (titles, descriptions, tags)"
-      }
-    },
-    {
-      "unique-id": "module-boundaries",
-      "name": "Module Boundary Enforcement",
-      "description": "Architectural control ensuring modules communicate through defined interfaces only",
-      "metadata": {
-        "pattern": "Each module exposes only router interface",
-        "rule": "No direct access to other modules' repositories or services",
-        "benefit": "Enables future extraction to microservices"
-      }
-    },
-    {
-      "unique-id": "layer-separation",
-      "name": "Layer Separation",
-      "description": "Each module maintains three distinct layers with clear responsibilities",
-      "metadata": {
-        "layers": {
-          "router": "HTTP handling only, no business logic",
-          "service": "Business logic, validation, orchestration",
-          "repository": "Data access only, no business rules"
-        },
-        "benefit": "Independent testing and easier maintenance"
-      }
-    },
-    {
-      "unique-id": "shared-infrastructure",
-      "name": "Centralized Infrastructure",
-      "description": "Common infrastructure components prevent duplication and ensure consistency",
-      "metadata": {
-        "components": [
-          "Database connection management",
-          "Security utilities",
-          "Base repository pattern"
-        ],
-        "benefit": "Consistent security and data access across all modules"
-      }
     }
   ]
 }

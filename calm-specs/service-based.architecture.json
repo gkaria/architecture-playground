@@ -13,7 +13,29 @@
     }
   }],
   "nodes": [
-    {"unique-id": "task-service", "node-type": "service", "name": "Task Service"},
-    {"unique-id": "shared-db", "node-type": "datastore", "name": "Shared Database"}
+    {
+      "unique-id": "task-service",
+      "node-type": "service",
+      "name": "Task Service",
+      "description": "Coarse-grained service handling all task-related operations"
+    },
+    {
+      "unique-id": "shared-db",
+      "node-type": "datastore",
+      "name": "Shared Database",
+      "description": "SQLite database shared across all services"
+    }
+  ],
+  "relationships": [
+    {
+      "unique-id": "service-to-db",
+      "relationship-type": {
+        "interacts": {
+          "actor": "task-service",
+          "nodes": ["shared-db"]
+        }
+      },
+      "description": "Task service accesses shared database"
+    }
   ]
 }
